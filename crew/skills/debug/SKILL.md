@@ -16,7 +16,7 @@ Symptom: $ARGUMENTS
 4. **Escalation check.** If the fix touches an irreversible effect (moving value, sending, deleting, publishing), auth, a migration on existing data or a production admin command (or anything the project `CLAUDE.md` lists), stop here. Report the root cause, the proposed fix and the risk, and ask before acting.
 5. **Reproduce.** Run `crew:test-engineer` to write a test that reproduces the bug, red for the right reason, before any fix.
 6. **Fix.** Run `crew:implementer` for the minimal fix. Never change the test's expected value to fit the code.
-7. **Verify.** Run `crew:test-runner` for the test, the surrounding suite, type-check and lint.
+7. **Verify.** Run `crew:test-runner` for the repro test plus the affected tests (pass it the base branch), type-check and lint, then the full suite. If it fails, fix and re-run until a full suite passes after the last change.
 8. **Summarize.** Root cause, fix, evidence pasted, follow-ups.
 
 Do not end the session until all four are true: root cause documented, fix implemented, tests pass, no new type errors. Exception: the escalation stop in step 4.

@@ -36,7 +36,7 @@ Run `crew:test-engineer` with the spec literals. The brief carries every scenari
 
 ## 4. GREEN
 
-Run `crew:implementer` with the test paths. Then run `crew:test-runner` for the test, type-check and lint, using the commands in the project `CLAUDE.md`, and keep the summary lines it returns verbatim for the report. Commit GREEN: `feat(<scope>): ...` or `fix(<scope>): ...`. For exempt work, run `crew:implementer` with the acceptance checks instead of test paths, and commit as `refactor`, `docs` or `chore`.
+Run `crew:implementer` with the test paths. Then run `crew:test-runner` scoped to the new test paths plus `affected` (pass it the base branch), and ask for type-check and lint, using the commands in the project `CLAUDE.md`. Commit GREEN: `feat(<scope>): ...` or `fix(<scope>): ...`. For exempt work, run `crew:implementer` with the acceptance checks instead of test paths, and commit as `refactor`, `docs` or `chore`.
 
 ## 5. Critique
 
@@ -44,17 +44,19 @@ Run `crew:code-reviewer` on the diff against the base branch. For each finding, 
 
 ## 6. Feedback
 
-Fix confirmed findings, with a test when behavior changes, then re-run the checks through `crew:test-runner`. For each other finding, state why it is disputed (with evidence) or deferred. Any correction that states a rule goes into the nearest `CLAUDE.md` or rule file in the same change, and you tell the user.
+Fix confirmed findings, with a test when behavior changes, then re-run the checks through `crew:test-runner`, scoped to `affected` (pass it the base branch). For each other finding, state why it is disputed (with evidence) or deferred. Any correction that states a rule goes into the nearest `CLAUDE.md` or rule file in the same change, and you tell the user.
 
 ## 7. Report
 
-The report is the last message of the run. Paste evidence, do not describe it: the GREEN line is the runner's own output as `crew:test-runner` returned it, not a count you typed.
+Before the report, run `crew:test-runner` with scope `full` as the final gate, whatever the review found. If the final gate fails, fix and re-run it: the report needs a passing full run after the last code change, and the runner's first line must say `full`.
+
+The report is the last message of the run. Paste evidence, do not describe it: the GREEN evidence is the summary line of that final gate run, as `crew:test-runner` returned it, not a count you typed.
 
 ```markdown
 ## Report
 - Requirement (the literals)
 - What changed (files, one line each)
-- Evidence: the RED failing assertion, the GREEN run, type-check and lint results (pasted)
+- Evidence: the RED failing assertion, the final gate run, type-check and lint results (pasted)
 - Review: table of findings (severity, file:line, fixed / disputed / deferred and why)
 - Decisions needed from you, assumptions made
 - Follow-ups
