@@ -1,6 +1,6 @@
 ---
 name: test-runner
-description: "Use proactively to run tests, type-check and lint, returning only the failures and a short summary so long output stays out of the main context."
+description: "Runs tests, type-check and lint and returns only the failures and a short summary, so use it whenever asked to run tests or checks, even a single command, instead of running them yourself."
 tools: Read, Grep, Bash
 maxTurns: 15
 model: sonnet
