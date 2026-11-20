@@ -42,6 +42,8 @@ The tests live in the source repository this marketplace is published from, not 
 - `bash tests/plugin/run.sh`: frontmatter, descriptions, references, manifests, house rules, then `claude plugin validate`.
 - `bash tests/vendor/run.sh`: `crew-vendor` on fixtures and on the real plugin.
 - `crew/hooks/tests/run-all.sh`: the hooks.
-- Evals (cost real money, they need the fixture repos the cases build with `--scaffold`): `claude plugin eval ./crew --model sonnet --runs 2 --max-cost-usd 4 --trust-plugin --scaffold --allow-tools Bash`. Results land in `crew/evals/results/`, which is git-ignored.
+- Evals (they start real Claude sessions: billed per token on an API key, counted against plan usage on a subscription; they need the fixture repos the cases build with `--scaffold`): `claude plugin eval ./crew --model sonnet --runs 2 --max-cost-usd 4 --trust-plugin --scaffold --allow-tools Bash`. Results land in `crew/evals/results/`, which is git-ignored.
+  - On macOS the eval sandbox blocks the `/usr/bin/git` launcher (xcrun cannot write its cache), so a case that runs git fails and the test runner falls back to the full suite. Install a standalone git (for example Homebrew's) before running the evals.
+  - `regex` graders use JavaScript regular expressions: no inline flags such as `(?i)`; write `[Aa]ffected` instead.
 
 MIT licensed, see LICENSE.

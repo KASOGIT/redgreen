@@ -53,4 +53,4 @@ git add -A && git commit -q -m "feat: alpha and beta modules with tests"
 
 git checkout -q -b feature
 printf '%s\n' "alpha_sig() { printf '%s' \"\${1//half/Half}\" | cksum | cut -d' ' -f1; }" >src/alpha.sh
-git add -A && git commit -q -m "fix(alpha): normalize the word half before hashing"
+git add -A && git commit -q -m "refactor(alpha): tidy input handling"
