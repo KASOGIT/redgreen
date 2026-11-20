@@ -12,6 +12,8 @@ claude plugin install crew-office@redgreen   # optional: the pixel-art desks pan
 
 Third-party marketplaces start with auto-update off. Turn it on in `/plugin` > Marketplaces > redgreen, and each new snapshot reaches you.
 
+To see the plugin in use within a full setup (personal rules, models, the weekly improvement loop), and a prompt to build your own: https://claude.ai/artifact/QHJmdBYHe69SRsGGzxvPeC
+
 ## What it contains
 
 - Seven agents: `test-engineer`, `implementer`, `code-reviewer`, `test-runner`, `domain-researcher`, `architecture-planner`, `debugger-analyst`. Each sets its own `model` and `effort` in its frontmatter and ends with a size-capped hand-back, so the main session only keeps summaries.
