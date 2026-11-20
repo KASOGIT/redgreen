@@ -1,0 +1,14 @@
+{
+  "$schema": "./hooks/crew/crew.schema.json",
+  "baseBranch": "<BASE_BRANCH>",
+  "protectedBranches": ["<PROTECTED_BRANCH>"],
+  "specFirst": {
+    "mode": "nudge",
+    "ruleFile": ".claude/rules/tdd.md",
+    "roots": [
+      { "path": "<SOURCE_ROOT, for example src>", "moduleDepth": 1 }
+    ],
+    "sourceExtensions": ["<EXTENSION, for example .ts>"],
+    "testPatterns": ["<TEST_GLOB, for example *.spec.ts>"]
+  }
+}

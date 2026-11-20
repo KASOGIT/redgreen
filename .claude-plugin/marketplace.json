@@ -1,0 +1,21 @@
+{
+  "name": "redgreen",
+  "description": "Redgreen: a spec-first, test-first Claude Code workflow with subagents and a reviewer.",
+  "owner": { "name": "KASOGIT" },
+  "plugins": [
+    {
+      "name": "crew",
+      "source": "./crew",
+      "description": "Spec, plan, RED, GREEN, critique and report: seven subagents and four workflow skills (feature, debug, review, adopt).",
+      "category": "workflow",
+      "tags": ["tdd", "subagents", "review", "workflow"]
+    },
+    {
+      "name": "crew-office",
+      "source": "./crew-office",
+      "description": "A live pixel-art pane that shows the crew agents working; /crew-office toggles it.",
+      "category": "visualization",
+      "tags": ["crew", "agents", "pane", "pixel-art"]
+    }
+  ]
+}

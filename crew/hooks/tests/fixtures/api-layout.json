@@ -1,0 +1,38 @@
+{
+  "$schema": "./crew.schema.json",
+  "$comment": "Test fixture: a nested layout with numeric-prefixed cross-cutting layers, kept to prove that layout stays reproducible through config. Not an example for users, see ../../crew.example.json.",
+  "baseBranch": "main",
+  "protectedBranches": [
+    "main",
+    "master",
+    "develop",
+    "production"
+  ],
+  "specFirst": {
+    "$comment": "Before an existing production file under a root is edited, a test file must already be touched under the same module: modified, staged, untracked, or committed ahead of origin/<baseBranch>. Without a specFirst block the hook does nothing.",
+    "mode": "nudge",
+    "ruleFile": ".claude/rules/tdd.md",
+    "roots": [
+      {
+        "$comment": "services/core/src/<context>/...: the first directory under the root is the module. Top-level directories prefixed NN_ (00_adapters, 04_gateway-*) are cross-cutting layers: a test anywhere under the root satisfies them.",
+        "path": "services/core/src",
+        "moduleDepth": 1,
+        "sharedModulePattern": "^[0-9]{2}_"
+      }
+    ],
+    "sourceExtensions": [
+      ".ts"
+    ],
+    "testPatterns": [
+      "*.spec.ts",
+      "*.test.ts"
+    ],
+    "ignoreRegex": [
+      "\\.test\\.[^/]+\\.ts$",
+      "\\.(d|builder|interface)\\.ts$",
+      "/monitorKeys\\.ts$",
+      "/[^./]+\\.presenter\\.ts$",
+      "/00_fixtures/"
+    ]
+  }
+}

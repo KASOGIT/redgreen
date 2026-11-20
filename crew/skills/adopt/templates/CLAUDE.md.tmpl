@@ -1,0 +1,42 @@
+# <PROJECT NAME>
+
+<One or two sentences: what the product is, and what a mistake costs here.>
+
+## Repo map
+
+- `<path>`: <what lives there>
+
+## Commands
+
+Run from `<directory>`.
+
+| Task | Command |
+|---|---|
+| Install | `<INSTALL_COMMAND>` |
+| Run | `<RUN_COMMAND>` |
+| All tests | `<ALL_TESTS_COMMAND>` |
+| One test | `<ONE_TEST_COMMAND>` |
+| Type-check | `<TYPECHECK_COMMAND>` |
+| Lint | `<LINT_COMMAND>` |
+| Format | `<FORMAT_COMMAND>` |
+
+Before committing: `<PRE_COMMIT_COMMANDS>`.
+
+## Git and PRs
+
+- Base branch: `<BASE_BRANCH>`. Protected: `<PROTECTED_BRANCHES>`. Never commit or push to a protected branch without explicit confirmation.
+- Commits: `<COMMIT_CONVENTION>`. PR rules: `<PR_RULES>`.
+
+## Escalate, do not act
+
+Stop with root cause, options and a recommendation, and wait, for: <ESCALATION_LIST>, new dependencies, architecture choices and deviations from existing patterns.
+
+## Invariants
+
+- <Invariant that must always hold, for example integer money, idempotent retries, auth before action.>
+
+## Rules and agents
+
+- Spec-first protocol and this repo's test commands: `.claude/rules/tdd.md`.
+- Workflow: `/feature`, `/debug`, `/review`.
+- Keep the main conversation small: hand work whose output you only need summarized to the agents in `.claude/agents/`. Test, type-check and lint runs go to `test-runner`, reading an unfamiliar area to `domain-researcher`, long logs and traces to `debugger-analyst`, a diff to `code-reviewer`. Decisions and anything about the user's intent stay in the main conversation.
