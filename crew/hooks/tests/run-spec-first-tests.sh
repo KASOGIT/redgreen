@@ -89,12 +89,12 @@ TEMPLATE="$TMP/template"
 git init -q --bare "$TMP/remote.git"
 git init -q -b main "$TEMPLATE"
 for f in \
-  services/core/src/payment/Existing.usecase.ts \
-  services/core/src/payment/Existing.usecase.int.spec.ts \
-  services/core/src/payment/refund/Refund.usecase.ts \
-  services/core/src/ledger/Other.usecase.ts \
-  services/core/src/ledger/Other.usecase.int.spec.ts \
-  services/core/src/payment-gateway/Gateway.ts \
+  services/core/src/orders/Existing.usecase.ts \
+  services/core/src/orders/Existing.usecase.int.spec.ts \
+  services/core/src/orders/refund/Refund.usecase.ts \
+  services/core/src/shipping/Other.usecase.ts \
+  services/core/src/shipping/Other.usecase.int.spec.ts \
+  services/core/src/orders-gateway/Gateway.ts \
   services/core/src/00_adapters/logger/logger.ts; do
   mkdir -p "$TEMPLATE/$(dirname "$f")"
   echo "// baseline" >"$TEMPLATE/$f"

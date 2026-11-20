@@ -1,60 +1,60 @@
-{"name":"ignores an int spec","file":"services/core/src/payment/Create.usecase.int.spec.ts","mode":"enforce","expect":"silent"}
-{"name":"ignores a unit spec","file":"services/core/src/payment/computeFee.unit.spec.ts","mode":"enforce","expect":"silent"}
-{"name":"ignores a .test.ts file","file":"services/core/src/payment/computeFee.test.ts","mode":"enforce","expect":"silent"}
-{"name":"ignores a nested spec","file":"services/core/src/payment/refund/Refund.usecase.int.spec.ts","mode":"enforce","expect":"silent"}
+{"name":"ignores an int spec","file":"services/core/src/orders/Create.usecase.int.spec.ts","mode":"enforce","expect":"silent"}
+{"name":"ignores a unit spec","file":"services/core/src/orders/computeFee.unit.spec.ts","mode":"enforce","expect":"silent"}
+{"name":"ignores a .test.ts file","file":"services/core/src/orders/computeFee.test.ts","mode":"enforce","expect":"silent"}
+{"name":"ignores a nested spec","file":"services/core/src/orders/refund/Refund.usecase.int.spec.ts","mode":"enforce","expect":"silent"}
 {"name":"ignores a .d.ts file","file":"services/core/src/00_adapters/database/database.types.d.ts","mode":"enforce","expect":"silent"}
 {"name":"ignores a file under __snapshots__","file":"services/core/src/00_adapters/__snapshots__/schema.ts","mode":"enforce","expect":"silent"}
-{"name":"ignores a file under a fixtures directory","file":"services/core/src/payment/00_shared/fixtures/createPayment.ts","mode":"enforce","expect":"silent"}
+{"name":"ignores a file under a fixtures directory","file":"services/core/src/orders/00_shared/fixtures/createOrder.ts","mode":"enforce","expect":"silent"}
 {"name":"ignores a file under a test directory","file":"services/core/src/01_shared/test/helpers.ts","mode":"enforce","expect":"silent"}
-{"name":"ignores a file under __mocks__","file":"services/core/src/__mocks__/stripe.ts","mode":"enforce","expect":"silent"}
-{"name":"ignores a .fixture.ts file","file":"services/core/src/payment/Payment.fixture.ts","mode":"enforce","expect":"silent"}
-{"name":"ignores a .fixtures.ts file","file":"services/core/src/00_adapters/stripe/Stripe.fixtures.ts","mode":"enforce","expect":"silent"}
+{"name":"ignores a file under __mocks__","file":"services/core/src/__mocks__/carrier.ts","mode":"enforce","expect":"silent"}
+{"name":"ignores a .fixture.ts file","file":"services/core/src/orders/Order.fixture.ts","mode":"enforce","expect":"silent"}
+{"name":"ignores a .fixtures.ts file","file":"services/core/src/00_adapters/carrier/Carrier.fixtures.ts","mode":"enforce","expect":"silent"}
 {"name":"ignores a .ts file directly under services/core/src","file":"services/core/src/aws_ecs.ts","mode":"enforce","expect":"silent"}
-{"name":"ignores another app","file":"services/dashboard/src/payment/Create.ts","mode":"enforce","expect":"silent"}
-{"name":"ignores a library","file":"libs/kandor/src/payment/Button.ts","mode":"enforce","expect":"silent"}
+{"name":"ignores another app","file":"services/dashboard/src/orders/Create.ts","mode":"enforce","expect":"silent"}
+{"name":"ignores a library","file":"libs/kandor/src/orders/Button.ts","mode":"enforce","expect":"silent"}
 {"name":"ignores services/core outside src","file":"services/core/tools/migrate.ts","mode":"enforce","expect":"silent"}
-{"name":"ignores a .json file in services/core/src","file":"services/core/src/payment/rates.json","mode":"enforce","expect":"silent"}
-{"name":"ignores a .js file in services/core/src","file":"services/core/src/payment/legacy.js","mode":"enforce","expect":"silent"}
-{"name":"ignores a .tsx file in services/core/src","file":"services/core/src/payment/View.tsx","mode":"enforce","expect":"silent"}
-{"name":"shadow logs a production edit with no spec","file":"services/core/src/payment/Create.usecase.ts","mode":"shadow","expect":"logged"}
-{"name":"enforce blocks a production edit with no spec","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","expect":"blocked"}
-{"name":"enforce blocks a MultiEdit production edit","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","tool":"MultiEdit","expect":"blocked"}
-{"name":"enforce blocks a Write over an existing production file","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","tool":"Write","expect":"blocked"}
-{"name":"shadow logs a deeply nested production file under its top-level context","file":"services/core/src/payment/refund/00_shared/Refund.ts","mode":"shadow","expect":"logged"}
+{"name":"ignores a .json file in services/core/src","file":"services/core/src/orders/rates.json","mode":"enforce","expect":"silent"}
+{"name":"ignores a .js file in services/core/src","file":"services/core/src/orders/legacy.js","mode":"enforce","expect":"silent"}
+{"name":"ignores a .tsx file in services/core/src","file":"services/core/src/orders/View.tsx","mode":"enforce","expect":"silent"}
+{"name":"shadow logs a production edit with no spec","file":"services/core/src/orders/Create.usecase.ts","mode":"shadow","expect":"logged"}
+{"name":"enforce blocks a production edit with no spec","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","expect":"blocked"}
+{"name":"enforce blocks a MultiEdit production edit","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","tool":"MultiEdit","expect":"blocked"}
+{"name":"enforce blocks a Write over an existing production file","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","tool":"Write","expect":"blocked"}
+{"name":"shadow logs a deeply nested production file under its top-level context","file":"services/core/src/orders/refund/00_shared/Refund.ts","mode":"shadow","expect":"logged"}
 {"name":"shadow logs a numeric-prefixed context","file":"services/core/src/00_adapters/logger/logger.ts","mode":"shadow","expect":"logged"}
 {"name":"shadow logs a mixed-case dashed context","file":"services/core/src/BNPL-aggregator/Offer.usecase.ts","mode":"shadow","expect":"logged"}
 {"name":"shadow logs a Write over an existing file of a brand new context","file":"services/core/src/brand-new/Thing.ts","tool":"Write","mode":"shadow","expect":"logged"}
-{"name":"shadow logs a path with spaces","file":"services/core/src/payment/My File.ts","mode":"shadow","expect":"logged"}
-{"name":"baseline spec already on origin/main does not count","file":"services/core/src/payment/Existing.usecase.ts","mode":"enforce","expect":"blocked"}
-{"name":"unset mode defaults to nudge","file":"services/core/src/payment/Create.usecase.ts","mode":"unset","expect":"nudged"}
-{"name":"unknown mode behaves as shadow","file":"services/core/src/payment/Create.usecase.ts","mode":"banana","expect":"logged"}
-{"name":"mode ENFORCE blocks like enforce","file":"services/core/src/payment/Create.usecase.ts","mode":"ENFORCE","expect":"blocked"}
-{"name":"resolves a path relative to the repo root","file":"services/core/src/payment/Create.usecase.ts","pathmode":"rel","mode":"enforce","expect":"blocked"}
-{"name":"resolves a path relative to services/core","file":"services/core/src/payment/Create.usecase.ts","pathmode":"relapi","mode":"enforce","expect":"blocked"}
-{"name":"works without cwd in the input","file":"services/core/src/payment/Create.usecase.ts","pathmode":"nocwd","mode":"enforce","expect":"blocked"}
-{"name":"a modified tracked spec in the same context allows the edit","file":"services/core/src/payment/Create.usecase.ts","setup":["modify services/core/src/payment/Existing.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
-{"name":"a staged new spec in the same context allows the edit","file":"services/core/src/payment/Create.usecase.ts","setup":["add services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
-{"name":"an untracked new spec in the same context allows the edit","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
-{"name":"an untracked .test.ts in the same context allows the edit","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/payment/computeFee.test.ts"],"mode":"enforce","expect":"silent"}
-{"name":"an untracked unit spec in a nested directory of the same context allows the edit","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/payment/refund/computeRefund.unit.spec.ts"],"mode":"enforce","expect":"silent"}
-{"name":"a nested production file is allowed by a spec at the top of its context","file":"services/core/src/payment/refund/Refund.usecase.ts","setup":["untracked services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
-{"name":"a spec committed ahead of origin/main allows the edit","file":"services/core/src/payment/Create.usecase.ts","setup":["commit services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
-{"name":"a nested spec committed ahead of origin/main allows the edit","file":"services/core/src/payment/Create.usecase.ts","setup":["commit services/core/src/payment/refund/Refund.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
-{"name":"a baseline spec modified in a branch commit allows the edit","file":"services/core/src/payment/Create.usecase.ts","setup":["commit services/core/src/payment/Existing.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
-{"name":"a spec in the same context leaves shadow mode silent","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"shadow","expect":"silent"}
+{"name":"shadow logs a path with spaces","file":"services/core/src/orders/My File.ts","mode":"shadow","expect":"logged"}
+{"name":"baseline spec already on origin/main does not count","file":"services/core/src/orders/Existing.usecase.ts","mode":"enforce","expect":"blocked"}
+{"name":"unset mode defaults to nudge","file":"services/core/src/orders/Create.usecase.ts","mode":"unset","expect":"nudged"}
+{"name":"unknown mode behaves as shadow","file":"services/core/src/orders/Create.usecase.ts","mode":"banana","expect":"logged"}
+{"name":"mode ENFORCE blocks like enforce","file":"services/core/src/orders/Create.usecase.ts","mode":"ENFORCE","expect":"blocked"}
+{"name":"resolves a path relative to the repo root","file":"services/core/src/orders/Create.usecase.ts","pathmode":"rel","mode":"enforce","expect":"blocked"}
+{"name":"resolves a path relative to services/core","file":"services/core/src/orders/Create.usecase.ts","pathmode":"relapi","mode":"enforce","expect":"blocked"}
+{"name":"works without cwd in the input","file":"services/core/src/orders/Create.usecase.ts","pathmode":"nocwd","mode":"enforce","expect":"blocked"}
+{"name":"a modified tracked spec in the same context allows the edit","file":"services/core/src/orders/Create.usecase.ts","setup":["modify services/core/src/orders/Existing.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
+{"name":"a staged new spec in the same context allows the edit","file":"services/core/src/orders/Create.usecase.ts","setup":["add services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
+{"name":"an untracked new spec in the same context allows the edit","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
+{"name":"an untracked .test.ts in the same context allows the edit","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/orders/computeFee.test.ts"],"mode":"enforce","expect":"silent"}
+{"name":"an untracked unit spec in a nested directory of the same context allows the edit","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/orders/refund/computeRefund.unit.spec.ts"],"mode":"enforce","expect":"silent"}
+{"name":"a nested production file is allowed by a spec at the top of its context","file":"services/core/src/orders/refund/Refund.usecase.ts","setup":["untracked services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
+{"name":"a spec committed ahead of origin/main allows the edit","file":"services/core/src/orders/Create.usecase.ts","setup":["commit services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
+{"name":"a nested spec committed ahead of origin/main allows the edit","file":"services/core/src/orders/Create.usecase.ts","setup":["commit services/core/src/orders/refund/Refund.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
+{"name":"a baseline spec modified in a branch commit allows the edit","file":"services/core/src/orders/Create.usecase.ts","setup":["commit services/core/src/orders/Existing.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
+{"name":"a spec in the same context leaves shadow mode silent","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"shadow","expect":"silent"}
 {"name":"a spec in 00_adapters allows an edit in 00_adapters","file":"services/core/src/00_adapters/logger/logger.ts","setup":["untracked services/core/src/00_adapters/logger/logger.unit.spec.ts"],"mode":"enforce","expect":"silent"}
-{"name":"an untracked spec in a different context is not enough","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/ledger/Post.usecase.int.spec.ts"],"mode":"enforce","expect":"blocked"}
-{"name":"a modified spec in a different context is not enough","file":"services/core/src/payment/Create.usecase.ts","setup":["modify services/core/src/ledger/Other.usecase.int.spec.ts"],"mode":"enforce","expect":"blocked"}
-{"name":"a staged spec in a different context is not enough","file":"services/core/src/payment/Create.usecase.ts","setup":["add services/core/src/ledger/Post.usecase.int.spec.ts"],"mode":"enforce","expect":"blocked"}
-{"name":"a committed spec in a different context is not enough","file":"services/core/src/payment/Create.usecase.ts","setup":["commit services/core/src/ledger/Post.usecase.int.spec.ts"],"mode":"enforce","expect":"blocked"}
-{"name":"a spec in a context sharing a name prefix is not enough","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/payment-gateway/Gateway.int.spec.ts"],"mode":"enforce","expect":"blocked"}
-{"name":"a spec in a different context is logged in shadow mode","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/ledger/Post.usecase.int.spec.ts"],"mode":"shadow","expect":"logged"}
-{"name":"a deleted baseline spec does not count","file":"services/core/src/payment/Create.usecase.ts","setup":["delete services/core/src/payment/Existing.usecase.int.spec.ts"],"mode":"enforce","expect":"blocked"}
-{"name":"a gitignored spec does not count","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/payment/ignored-dir/Hidden.int.spec.ts"],"mode":"enforce","expect":"blocked"}
-{"name":"an untracked non-spec file does not count","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/payment/Create.helper.ts"],"mode":"enforce","expect":"blocked"}
-{"name":"a file merely named like a spec backup does not count","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/payment/Create.usecase.int.spec.ts.bak"],"mode":"enforce","expect":"blocked"}
-{"name":"a committed non-spec file does not count","file":"services/core/src/payment/Create.usecase.ts","setup":["commit services/core/src/payment/Create.helper.ts"],"mode":"enforce","expect":"blocked"}
-{"name":"mode off ignores a production edit with no spec","file":"services/core/src/payment/Create.usecase.ts","mode":"off","expect":"silent"}
+{"name":"an untracked spec in a different context is not enough","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/shipping/Post.usecase.int.spec.ts"],"mode":"enforce","expect":"blocked"}
+{"name":"a modified spec in a different context is not enough","file":"services/core/src/orders/Create.usecase.ts","setup":["modify services/core/src/shipping/Other.usecase.int.spec.ts"],"mode":"enforce","expect":"blocked"}
+{"name":"a staged spec in a different context is not enough","file":"services/core/src/orders/Create.usecase.ts","setup":["add services/core/src/shipping/Post.usecase.int.spec.ts"],"mode":"enforce","expect":"blocked"}
+{"name":"a committed spec in a different context is not enough","file":"services/core/src/orders/Create.usecase.ts","setup":["commit services/core/src/shipping/Post.usecase.int.spec.ts"],"mode":"enforce","expect":"blocked"}
+{"name":"a spec in a context sharing a name prefix is not enough","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/orders-gateway/Gateway.int.spec.ts"],"mode":"enforce","expect":"blocked"}
+{"name":"a spec in a different context is logged in shadow mode","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/shipping/Post.usecase.int.spec.ts"],"mode":"shadow","expect":"logged"}
+{"name":"a deleted baseline spec does not count","file":"services/core/src/orders/Create.usecase.ts","setup":["delete services/core/src/orders/Existing.usecase.int.spec.ts"],"mode":"enforce","expect":"blocked"}
+{"name":"a gitignored spec does not count","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/orders/ignored-dir/Hidden.int.spec.ts"],"mode":"enforce","expect":"blocked"}
+{"name":"an untracked non-spec file does not count","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/orders/Create.helper.ts"],"mode":"enforce","expect":"blocked"}
+{"name":"a file merely named like a spec backup does not count","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/orders/Create.usecase.int.spec.ts.bak"],"mode":"enforce","expect":"blocked"}
+{"name":"a committed non-spec file does not count","file":"services/core/src/orders/Create.usecase.ts","setup":["commit services/core/src/orders/Create.helper.ts"],"mode":"enforce","expect":"blocked"}
+{"name":"mode off ignores a production edit with no spec","file":"services/core/src/orders/Create.usecase.ts","mode":"off","expect":"silent"}
 {"name":"mode off ignores malformed input","mode":"off","input":"not json","expect":"silent"}
 {"name":"empty stdin fails open","mode":"enforce","input":"","expect":"silent"}
 {"name":"invalid JSON fails open","mode":"enforce","input":"{\"tool_input\": ","expect":"silent"}
@@ -64,168 +64,168 @@
 {"name":"tool_input without file_path fails open","mode":"enforce","input":"{\"tool_input\": {\"command\": \"ls\"}, \"cwd\": \"/\"}","expect":"silent"}
 {"name":"a numeric file_path fails open","mode":"enforce","input":"{\"tool_input\": {\"file_path\": 42}, \"cwd\": \"/\"}","expect":"silent"}
 {"name":"an empty file_path fails open","mode":"enforce","input":"{\"tool_input\": {\"file_path\": \"\"}, \"cwd\": \"/\"}","expect":"silent"}
-{"name":"a repo without origin/main compares against the local main branch","file":"services/core/src/payment/Create.usecase.ts","repo":"noorigin","mode":"enforce","expect":"blocked"}
-{"name":"a repo without origin/main logs against the local main branch in shadow mode","file":"services/core/src/payment/Create.usecase.ts","repo":"noorigin","mode":"shadow","expect":"logged"}
-{"name":"a spec in the working tree still allows the edit without origin/main","file":"services/core/src/payment/Create.usecase.ts","repo":"noorigin","setup":["untracked services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
-{"name":"a directory that is not a git repo fails open","file":"services/core/src/payment/Create.usecase.ts","repo":"nogit","mode":"enforce","expect":"silent"}
-{"name":"a directory that is not a git repo fails open in shadow mode","file":"services/core/src/payment/Create.usecase.ts","repo":"nogit","mode":"shadow","expect":"silent"}
-{"name":"missing jq fails open","file":"services/core/src/payment/Create.usecase.ts","env":"nojq","mode":"enforce","expect":"silent"}
-{"name":"missing git fails open","file":"services/core/src/payment/Create.usecase.ts","env":"nogit","mode":"enforce","expect":"silent"}
-{"name":"ignores a .test.presenter.ts file","file":"services/core/src/payment/Create/Create.test.presenter.ts","mode":"enforce","expect":"silent"}
+{"name":"a repo without origin/main compares against the local main branch","file":"services/core/src/orders/Create.usecase.ts","repo":"noorigin","mode":"enforce","expect":"blocked"}
+{"name":"a repo without origin/main logs against the local main branch in shadow mode","file":"services/core/src/orders/Create.usecase.ts","repo":"noorigin","mode":"shadow","expect":"logged"}
+{"name":"a spec in the working tree still allows the edit without origin/main","file":"services/core/src/orders/Create.usecase.ts","repo":"noorigin","setup":["untracked services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
+{"name":"a directory that is not a git repo fails open","file":"services/core/src/orders/Create.usecase.ts","repo":"nogit","mode":"enforce","expect":"silent"}
+{"name":"a directory that is not a git repo fails open in shadow mode","file":"services/core/src/orders/Create.usecase.ts","repo":"nogit","mode":"shadow","expect":"silent"}
+{"name":"missing jq fails open","file":"services/core/src/orders/Create.usecase.ts","env":"nojq","mode":"enforce","expect":"silent"}
+{"name":"missing git fails open","file":"services/core/src/orders/Create.usecase.ts","env":"nogit","mode":"enforce","expect":"silent"}
+{"name":"ignores a .test.presenter.ts file","file":"services/core/src/orders/Create/Create.test.presenter.ts","mode":"enforce","expect":"silent"}
 {"name":"ignores a .test.client.ts file","file":"services/core/src/00_adapters/database/database.test.client.ts","mode":"enforce","expect":"silent"}
 {"name":"ignores a .test-utils.ts file","file":"services/core/src/00_adapters/jest-setup/presenter.test-utils.ts","mode":"enforce","expect":"silent"}
-{"name":"ignores a .mock.ts file","file":"services/core/src/payment/Stripe.mock.ts","mode":"enforce","expect":"silent"}
-{"name":"ignores a .stub.ts file","file":"services/core/src/payment/Clock.stub.ts","mode":"enforce","expect":"silent"}
-{"name":"ignores a .builder.ts file","file":"services/core/src/payment/Payment.builder.ts","mode":"enforce","expect":"silent"}
-{"name":"ignores a .e2e-fixture.ts file","file":"services/core/src/00_adapters/e2e/payment.e2e-fixture.ts","mode":"enforce","expect":"silent"}
+{"name":"ignores a .mock.ts file","file":"services/core/src/orders/Carrier.mock.ts","mode":"enforce","expect":"silent"}
+{"name":"ignores a .stub.ts file","file":"services/core/src/orders/Clock.stub.ts","mode":"enforce","expect":"silent"}
+{"name":"ignores a .builder.ts file","file":"services/core/src/orders/Order.builder.ts","mode":"enforce","expect":"silent"}
+{"name":"ignores a .e2e-fixture.ts file","file":"services/core/src/00_adapters/e2e/order.e2e-fixture.ts","mode":"enforce","expect":"silent"}
 {"name":"ignores a file under 00_fixtures","file":"services/core/src/00_adapters/e2e/00_fixtures/seed.ts","mode":"enforce","expect":"silent"}
 {"name":"ignores the generated monitorKeys.ts","file":"services/core/src/00_adapters/logger/monitorKeys.ts","mode":"enforce","expect":"silent"}
-{"name":"ignores a repository interface file","file":"services/core/src/payment/repository/Payment.repository.interface.ts","mode":"enforce","expect":"silent"}
-{"name":"ignores a plain interface file","file":"services/core/src/payment/Authorizer.interface.ts","mode":"enforce","expect":"silent"}
-{"name":"ignores the presenter interface of a usecase","file":"services/core/src/payment/Create/presenter/Create.presenter.ts","mode":"enforce","expect":"silent"}
-{"name":"ignores a .presenter.interface.ts file","file":"services/core/src/payment/Create/Create.presenter.interface.ts","mode":"enforce","expect":"silent"}
-{"name":"an implementation presenter is gated","file":"services/core/src/payment/Create/Create.graphql.presenter.ts","mode":"enforce","expect":"blocked"}
-{"name":"a repository implementation is gated","file":"services/core/src/payment/repository/Payment.repository.ts","mode":"enforce","expect":"blocked"}
-{"name":"a directory merely containing test in its name is not a test directory","file":"services/core/src/payment/contest/Dispute.ts","mode":"enforce","expect":"blocked"}
+{"name":"ignores a repository interface file","file":"services/core/src/orders/repository/Order.repository.interface.ts","mode":"enforce","expect":"silent"}
+{"name":"ignores a plain interface file","file":"services/core/src/orders/Authorizer.interface.ts","mode":"enforce","expect":"silent"}
+{"name":"ignores the presenter interface of a usecase","file":"services/core/src/orders/Create/presenter/Create.presenter.ts","mode":"enforce","expect":"silent"}
+{"name":"ignores a .presenter.interface.ts file","file":"services/core/src/orders/Create/Create.presenter.interface.ts","mode":"enforce","expect":"silent"}
+{"name":"an implementation presenter is gated","file":"services/core/src/orders/Create/Create.graphql.presenter.ts","mode":"enforce","expect":"blocked"}
+{"name":"a repository implementation is gated","file":"services/core/src/orders/repository/Order.repository.ts","mode":"enforce","expect":"blocked"}
+{"name":"a directory merely containing test in its name is not a test directory","file":"services/core/src/orders/contest/Dispute.ts","mode":"enforce","expect":"blocked"}
 {"name":"a file merely ending like monitorKeys.ts is gated","file":"services/core/src/00_adapters/logger/otherMonitorKeys.ts","mode":"enforce","expect":"blocked"}
-{"name":"shadow logs the tool MultiEdit","file":"services/core/src/payment/Create.usecase.ts","tool":"MultiEdit","mode":"shadow","expect":"logged"}
-{"name":"shadow logs the tool Write over an existing file","file":"services/core/src/payment/Create.usecase.ts","tool":"Write","mode":"shadow","expect":"logged"}
-{"name":"a scaffold Write of a new usecase in shadow mode is logged as not blocking","file":"services/core/src/payment/NewThing/NewThing.usecase.ts","tool":"Write","new":true,"mode":"shadow","expect":"scaffold"}
-{"name":"a scaffold Write of a new usecase in enforce mode is allowed silently","file":"services/core/src/payment/NewThing/NewThing.usecase.ts","tool":"Write","new":true,"mode":"enforce","expect":"silent"}
-{"name":"a scaffold Write of a new repository implementation is allowed in enforce mode","file":"services/core/src/payment/NewThing/repository/NewThing.repository.ts","tool":"Write","new":true,"mode":"enforce","expect":"silent"}
+{"name":"shadow logs the tool MultiEdit","file":"services/core/src/orders/Create.usecase.ts","tool":"MultiEdit","mode":"shadow","expect":"logged"}
+{"name":"shadow logs the tool Write over an existing file","file":"services/core/src/orders/Create.usecase.ts","tool":"Write","mode":"shadow","expect":"logged"}
+{"name":"a scaffold Write of a new usecase in shadow mode is logged as not blocking","file":"services/core/src/orders/NewThing/NewThing.usecase.ts","tool":"Write","new":true,"mode":"shadow","expect":"scaffold"}
+{"name":"a scaffold Write of a new usecase in enforce mode is allowed silently","file":"services/core/src/orders/NewThing/NewThing.usecase.ts","tool":"Write","new":true,"mode":"enforce","expect":"silent"}
+{"name":"a scaffold Write of a new repository implementation is allowed in enforce mode","file":"services/core/src/orders/NewThing/repository/NewThing.repository.ts","tool":"Write","new":true,"mode":"enforce","expect":"silent"}
 {"name":"a scaffold Write into a brand new context is logged as not blocking","file":"services/core/src/brand-new/Thing.ts","tool":"Write","new":true,"mode":"shadow","expect":"scaffold"}
 {"name":"a scaffold Write in 00_adapters is logged as not blocking","file":"services/core/src/00_adapters/newthing/NewThing.ts","tool":"Write","new":true,"mode":"shadow","expect":"scaffold"}
-{"name":"an Edit of a path that does not exist yet is treated as scaffolding","file":"services/core/src/payment/NewThing/NewThing.usecase.ts","tool":"Edit","new":true,"mode":"shadow","expect":"scaffold"}
-{"name":"a scaffold Write with a spec already touched leaves shadow mode silent","file":"services/core/src/payment/NewThing/NewThing.usecase.ts","tool":"Write","new":true,"setup":["untracked services/core/src/payment/NewThing/NewThing.usecase.int.spec.ts"],"mode":"shadow","expect":"silent"}
-{"name":"a spec in a business context allows an edit in 00_adapters","file":"services/core/src/00_adapters/logger/logger.ts","setup":["untracked services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
-{"name":"a spec in a business context allows an edit in 01_shared","file":"services/core/src/01_shared/Money.ts","setup":["untracked services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
-{"name":"a spec in a business context allows an edit in 04_gateway-ledger","file":"services/core/src/04_gateway-ledger/LedgerGateway.ts","setup":["untracked services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
-{"name":"a committed spec in a business context allows an edit in 04_gateway-ledger","file":"services/core/src/04_gateway-ledger/LedgerGateway.ts","setup":["commit services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
-{"name":"a spec in 01_shared allows an edit in 04_gateway-ledger","file":"services/core/src/04_gateway-ledger/LedgerGateway.ts","setup":["untracked services/core/src/01_shared/Money.unit.spec.ts"],"mode":"enforce","expect":"silent"}
-{"name":"a layer edit with no spec anywhere is blocked","file":"services/core/src/04_gateway-ledger/LedgerGateway.ts","mode":"enforce","expect":"blocked"}
-{"name":"a layer edit with no spec anywhere is logged in shadow mode","file":"services/core/src/01_shared/Money.ts","mode":"shadow","expect":"logged"}
-{"name":"a spec in 00_adapters is not enough for a business context","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/00_adapters/logger/logger.unit.spec.ts"],"mode":"enforce","expect":"blocked"}
-{"name":"two shadow runs append two log lines","file":"services/core/src/payment/Create.usecase.ts","repeat":2,"mode":"shadow","expect":"logged"}
-{"name":"three shadow scaffold runs append three log lines","file":"services/core/src/payment/NewThing/NewThing.usecase.ts","tool":"Write","new":true,"repeat":3,"mode":"shadow","expect":"scaffold"}
-{"name":"a detached HEAD logs an empty branch","file":"services/core/src/payment/Create.usecase.ts","setup":["detach ."],"branch":"","mode":"shadow","expect":"logged"}
-{"name":"a spec deleted in a branch commit does not count","file":"services/core/src/payment/Create.usecase.ts","setup":["commitdelete services/core/src/payment/Existing.usecase.int.spec.ts"],"mode":"enforce","expect":"blocked"}
-{"name":"a spec deleted in a branch commit does not count when another context has one","file":"services/core/src/payment/Create.usecase.ts","setup":["commitdelete services/core/src/payment/Existing.usecase.int.spec.ts","commit services/core/src/ledger/Post.usecase.int.spec.ts"],"mode":"enforce","expect":"blocked"}
-{"name":"an unwritable log directory fails open silently","file":"services/core/src/payment/Create.usecase.ts","setup":["readonly-metrics ."],"skip_if_root":true,"mode":"shadow","expect":"silent"}
-{"name":"a worktree logs to the main checkout","file":"services/core/src/payment/Create.usecase.ts","repo":"worktree","mode":"shadow","expect":"logged"}
-{"name":"a worktree logs a scaffold to the main checkout","file":"services/core/src/payment/NewThing/NewThing.usecase.ts","repo":"worktree","tool":"Write","new":true,"mode":"shadow","expect":"scaffold"}
-{"name":"a worktree blocks a production edit with no spec","file":"services/core/src/payment/Create.usecase.ts","repo":"worktree","mode":"enforce","expect":"blocked"}
-{"name":"a worktree accepts an untracked spec in the worktree","file":"services/core/src/payment/Create.usecase.ts","repo":"worktree","setup":["untracked services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
-{"name":"a worktree accepts a spec committed on its branch","file":"services/core/src/payment/Create.usecase.ts","repo":"worktree","setup":["commit services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
-{"name":"a worktree resolves a path relative to services/core","file":"services/core/src/payment/Create.usecase.ts","repo":"worktree","pathmode":"relapi","mode":"enforce","expect":"blocked"}
-{"name":"two worktree runs append two lines to the main checkout log","file":"services/core/src/payment/Create.usecase.ts","repo":"worktree","repeat":2,"mode":"shadow","expect":"logged"}
-{"name":"a symlinked checkout logs to the real checkout","file":"services/core/src/payment/Create.usecase.ts","repo":"symlink","mode":"shadow","expect":"logged"}
-{"name":"a symlinked checkout blocks a production edit with no spec","file":"services/core/src/payment/Create.usecase.ts","repo":"symlink","mode":"enforce","expect":"blocked"}
-{"name":"a symlinked checkout accepts an untracked spec","file":"services/core/src/payment/Create.usecase.ts","repo":"symlink","setup":["untracked services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
-{"name":"an unset CLAUDE_PROJECT_DIR run from services/core still logs to the repo root","file":"services/core/src/payment/Create.usecase.ts","env":"noprojdir","mode":"shadow","expect":"logged"}
-{"name":"a CLAUDE_PROJECT_DIR pointing elsewhere does not move the log","file":"services/core/src/payment/Create.usecase.ts","env":"badprojdir","mode":"shadow","expect":"logged"}
-{"name":"nudge mode prints one valid nudge for a would-block and logs it","file":"services/core/src/payment/Create.usecase.ts","mode":"nudge","expect":"nudged"}
-{"name":"an unset mode nudges once per session and context, logs every time and never blocks","file":"services/core/src/payment/Create.usecase.ts","mode":"unset","runs":[{},{}],"pattern":"NS","expect":"nudged"}
-{"name":"nudge mode nudges a MultiEdit","file":"services/core/src/payment/Create.usecase.ts","tool":"MultiEdit","expect":"nudged"}
-{"name":"nudge mode nudges a Write over an existing file","file":"services/core/src/payment/Create.usecase.ts","tool":"Write","expect":"nudged"}
-{"name":"nudge mode nudges a deeply nested production file","file":"services/core/src/payment/refund/00_shared/Refund.ts","expect":"nudged"}
-{"name":"nudge mode nudges a path with spaces","file":"services/core/src/payment/My File.ts","expect":"nudged"}
+{"name":"an Edit of a path that does not exist yet is treated as scaffolding","file":"services/core/src/orders/NewThing/NewThing.usecase.ts","tool":"Edit","new":true,"mode":"shadow","expect":"scaffold"}
+{"name":"a scaffold Write with a spec already touched leaves shadow mode silent","file":"services/core/src/orders/NewThing/NewThing.usecase.ts","tool":"Write","new":true,"setup":["untracked services/core/src/orders/NewThing/NewThing.usecase.int.spec.ts"],"mode":"shadow","expect":"silent"}
+{"name":"a spec in a business context allows an edit in 00_adapters","file":"services/core/src/00_adapters/logger/logger.ts","setup":["untracked services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
+{"name":"a spec in a business context allows an edit in 01_shared","file":"services/core/src/01_shared/Amount.ts","setup":["untracked services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
+{"name":"a spec in a business context allows an edit in 04_gateway-billing","file":"services/core/src/04_gateway-billing/BillingGateway.ts","setup":["untracked services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
+{"name":"a committed spec in a business context allows an edit in 04_gateway-billing","file":"services/core/src/04_gateway-billing/BillingGateway.ts","setup":["commit services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
+{"name":"a spec in 01_shared allows an edit in 04_gateway-billing","file":"services/core/src/04_gateway-billing/BillingGateway.ts","setup":["untracked services/core/src/01_shared/Amount.unit.spec.ts"],"mode":"enforce","expect":"silent"}
+{"name":"a layer edit with no spec anywhere is blocked","file":"services/core/src/04_gateway-billing/BillingGateway.ts","mode":"enforce","expect":"blocked"}
+{"name":"a layer edit with no spec anywhere is logged in shadow mode","file":"services/core/src/01_shared/Amount.ts","mode":"shadow","expect":"logged"}
+{"name":"a spec in 00_adapters is not enough for a business context","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/00_adapters/logger/logger.unit.spec.ts"],"mode":"enforce","expect":"blocked"}
+{"name":"two shadow runs append two log lines","file":"services/core/src/orders/Create.usecase.ts","repeat":2,"mode":"shadow","expect":"logged"}
+{"name":"three shadow scaffold runs append three log lines","file":"services/core/src/orders/NewThing/NewThing.usecase.ts","tool":"Write","new":true,"repeat":3,"mode":"shadow","expect":"scaffold"}
+{"name":"a detached HEAD logs an empty branch","file":"services/core/src/orders/Create.usecase.ts","setup":["detach ."],"branch":"","mode":"shadow","expect":"logged"}
+{"name":"a spec deleted in a branch commit does not count","file":"services/core/src/orders/Create.usecase.ts","setup":["commitdelete services/core/src/orders/Existing.usecase.int.spec.ts"],"mode":"enforce","expect":"blocked"}
+{"name":"a spec deleted in a branch commit does not count when another context has one","file":"services/core/src/orders/Create.usecase.ts","setup":["commitdelete services/core/src/orders/Existing.usecase.int.spec.ts","commit services/core/src/shipping/Post.usecase.int.spec.ts"],"mode":"enforce","expect":"blocked"}
+{"name":"an unwritable log directory fails open silently","file":"services/core/src/orders/Create.usecase.ts","setup":["readonly-metrics ."],"skip_if_root":true,"mode":"shadow","expect":"silent"}
+{"name":"a worktree logs to the main checkout","file":"services/core/src/orders/Create.usecase.ts","repo":"worktree","mode":"shadow","expect":"logged"}
+{"name":"a worktree logs a scaffold to the main checkout","file":"services/core/src/orders/NewThing/NewThing.usecase.ts","repo":"worktree","tool":"Write","new":true,"mode":"shadow","expect":"scaffold"}
+{"name":"a worktree blocks a production edit with no spec","file":"services/core/src/orders/Create.usecase.ts","repo":"worktree","mode":"enforce","expect":"blocked"}
+{"name":"a worktree accepts an untracked spec in the worktree","file":"services/core/src/orders/Create.usecase.ts","repo":"worktree","setup":["untracked services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
+{"name":"a worktree accepts a spec committed on its branch","file":"services/core/src/orders/Create.usecase.ts","repo":"worktree","setup":["commit services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
+{"name":"a worktree resolves a path relative to services/core","file":"services/core/src/orders/Create.usecase.ts","repo":"worktree","pathmode":"relapi","mode":"enforce","expect":"blocked"}
+{"name":"two worktree runs append two lines to the main checkout log","file":"services/core/src/orders/Create.usecase.ts","repo":"worktree","repeat":2,"mode":"shadow","expect":"logged"}
+{"name":"a symlinked checkout logs to the real checkout","file":"services/core/src/orders/Create.usecase.ts","repo":"symlink","mode":"shadow","expect":"logged"}
+{"name":"a symlinked checkout blocks a production edit with no spec","file":"services/core/src/orders/Create.usecase.ts","repo":"symlink","mode":"enforce","expect":"blocked"}
+{"name":"a symlinked checkout accepts an untracked spec","file":"services/core/src/orders/Create.usecase.ts","repo":"symlink","setup":["untracked services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce","expect":"silent"}
+{"name":"an unset CLAUDE_PROJECT_DIR run from services/core still logs to the repo root","file":"services/core/src/orders/Create.usecase.ts","env":"noprojdir","mode":"shadow","expect":"logged"}
+{"name":"a CLAUDE_PROJECT_DIR pointing elsewhere does not move the log","file":"services/core/src/orders/Create.usecase.ts","env":"badprojdir","mode":"shadow","expect":"logged"}
+{"name":"nudge mode prints one valid nudge for a would-block and logs it","file":"services/core/src/orders/Create.usecase.ts","mode":"nudge","expect":"nudged"}
+{"name":"an unset mode nudges once per session and context, logs every time and never blocks","file":"services/core/src/orders/Create.usecase.ts","mode":"unset","runs":[{},{}],"pattern":"NS","expect":"nudged"}
+{"name":"nudge mode nudges a MultiEdit","file":"services/core/src/orders/Create.usecase.ts","tool":"MultiEdit","expect":"nudged"}
+{"name":"nudge mode nudges a Write over an existing file","file":"services/core/src/orders/Create.usecase.ts","tool":"Write","expect":"nudged"}
+{"name":"nudge mode nudges a deeply nested production file","file":"services/core/src/orders/refund/00_shared/Refund.ts","expect":"nudged"}
+{"name":"nudge mode nudges a path with spaces","file":"services/core/src/orders/My File.ts","expect":"nudged"}
 {"name":"nudge mode nudges a layer edit and names the whole source tree as scope","file":"services/core/src/00_adapters/logger/logger.ts","expect":"nudged"}
-{"name":"the nudge is delivered with a relative path and no cwd","file":"services/core/src/payment/Create.usecase.ts","pathmode":"nocwd","expect":"nudged"}
-{"name":"the second would-block in the same session and context prints nothing but still logs","file":"services/core/src/payment/Create.usecase.ts","runs":[{},{}],"pattern":"NS","expect":"nudged"}
-{"name":"a different file in the same session and context stays silent but is logged","file":"services/core/src/payment/Create.usecase.ts","runs":[{},{"file":"services/core/src/payment/refund/Refund.usecase.ts"}],"pattern":"NS","expect":"nudged"}
-{"name":"three runs in the same session and context nudge once and log three times","file":"services/core/src/payment/Create.usecase.ts","runs":[{},{},{}],"pattern":"NSS","expect":"nudged"}
-{"name":"a different context in the same session nudges again","file":"services/core/src/payment/Create.usecase.ts","runs":[{},{"file":"services/core/src/ledger/Other.usecase.ts"}],"pattern":"NN","expect":"nudged"}
-{"name":"a different session in the same context nudges again","file":"services/core/src/payment/Create.usecase.ts","runs":[{"session":"sess-a"},{"session":"sess-b"}],"pattern":"NN","expect":"nudged"}
-{"name":"the marker is keyed on session and context together","file":"services/core/src/payment/Create.usecase.ts","runs":[{"session":"sess-a"},{"session":"sess-a","file":"services/core/src/ledger/Other.usecase.ts"},{"session":"sess-b"},{"session":"sess-a"},{"session":"sess-b","file":"services/core/src/ledger/Other.usecase.ts"},{"session":"sess-b"}],"pattern":"NNNSNS","expect":"nudged"}
-{"name":"nudge mode stays silent when a spec in the same context is untracked","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"nudge","expect":"silent"}
-{"name":"nudge mode stays silent when a tracked spec in the same context is modified","file":"services/core/src/payment/Create.usecase.ts","setup":["modify services/core/src/payment/Existing.usecase.int.spec.ts"],"mode":"nudge","expect":"silent"}
-{"name":"nudge mode stays silent when a spec is staged","file":"services/core/src/payment/Create.usecase.ts","setup":["add services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"nudge","expect":"silent"}
-{"name":"nudge mode stays silent when a spec is committed ahead of origin/main","file":"services/core/src/payment/Create.usecase.ts","setup":["commit services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"nudge","expect":"silent"}
-{"name":"nudge mode stays silent for a layer edit when a spec exists in a business context","file":"services/core/src/01_shared/Money.ts","setup":["untracked services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"nudge","expect":"silent"}
-{"name":"nudge mode still nudges when the only touched spec is in a different context","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/ledger/Post.usecase.int.spec.ts"],"mode":"nudge","expect":"nudged"}
-{"name":"nudge mode still nudges when the baseline spec is only on origin/main","file":"services/core/src/payment/Existing.usecase.ts","mode":"nudge","expect":"nudged"}
-{"name":"nudge mode ignores an int spec","file":"services/core/src/payment/Create.usecase.int.spec.ts","mode":"nudge","expect":"silent"}
-{"name":"nudge mode ignores a unit spec","file":"services/core/src/payment/computeFee.unit.spec.ts","mode":"nudge","expect":"silent"}
+{"name":"the nudge is delivered with a relative path and no cwd","file":"services/core/src/orders/Create.usecase.ts","pathmode":"nocwd","expect":"nudged"}
+{"name":"the second would-block in the same session and context prints nothing but still logs","file":"services/core/src/orders/Create.usecase.ts","runs":[{},{}],"pattern":"NS","expect":"nudged"}
+{"name":"a different file in the same session and context stays silent but is logged","file":"services/core/src/orders/Create.usecase.ts","runs":[{},{"file":"services/core/src/orders/refund/Refund.usecase.ts"}],"pattern":"NS","expect":"nudged"}
+{"name":"three runs in the same session and context nudge once and log three times","file":"services/core/src/orders/Create.usecase.ts","runs":[{},{},{}],"pattern":"NSS","expect":"nudged"}
+{"name":"a different context in the same session nudges again","file":"services/core/src/orders/Create.usecase.ts","runs":[{},{"file":"services/core/src/shipping/Other.usecase.ts"}],"pattern":"NN","expect":"nudged"}
+{"name":"a different session in the same context nudges again","file":"services/core/src/orders/Create.usecase.ts","runs":[{"session":"sess-a"},{"session":"sess-b"}],"pattern":"NN","expect":"nudged"}
+{"name":"the marker is keyed on session and context together","file":"services/core/src/orders/Create.usecase.ts","runs":[{"session":"sess-a"},{"session":"sess-a","file":"services/core/src/shipping/Other.usecase.ts"},{"session":"sess-b"},{"session":"sess-a"},{"session":"sess-b","file":"services/core/src/shipping/Other.usecase.ts"},{"session":"sess-b"}],"pattern":"NNNSNS","expect":"nudged"}
+{"name":"nudge mode stays silent when a spec in the same context is untracked","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"nudge","expect":"silent"}
+{"name":"nudge mode stays silent when a tracked spec in the same context is modified","file":"services/core/src/orders/Create.usecase.ts","setup":["modify services/core/src/orders/Existing.usecase.int.spec.ts"],"mode":"nudge","expect":"silent"}
+{"name":"nudge mode stays silent when a spec is staged","file":"services/core/src/orders/Create.usecase.ts","setup":["add services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"nudge","expect":"silent"}
+{"name":"nudge mode stays silent when a spec is committed ahead of origin/main","file":"services/core/src/orders/Create.usecase.ts","setup":["commit services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"nudge","expect":"silent"}
+{"name":"nudge mode stays silent for a layer edit when a spec exists in a business context","file":"services/core/src/01_shared/Amount.ts","setup":["untracked services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"nudge","expect":"silent"}
+{"name":"nudge mode still nudges when the only touched spec is in a different context","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/shipping/Post.usecase.int.spec.ts"],"mode":"nudge","expect":"nudged"}
+{"name":"nudge mode still nudges when the baseline spec is only on origin/main","file":"services/core/src/orders/Existing.usecase.ts","mode":"nudge","expect":"nudged"}
+{"name":"nudge mode ignores an int spec","file":"services/core/src/orders/Create.usecase.int.spec.ts","mode":"nudge","expect":"silent"}
+{"name":"nudge mode ignores a unit spec","file":"services/core/src/orders/computeFee.unit.spec.ts","mode":"nudge","expect":"silent"}
 {"name":"nudge mode ignores a .d.ts file","file":"services/core/src/00_adapters/database/database.types.d.ts","mode":"nudge","expect":"silent"}
-{"name":"nudge mode ignores a file under a fixtures directory","file":"services/core/src/payment/00_shared/fixtures/createPayment.ts","mode":"nudge","expect":"silent"}
+{"name":"nudge mode ignores a file under a fixtures directory","file":"services/core/src/orders/00_shared/fixtures/createOrder.ts","mode":"nudge","expect":"silent"}
 {"name":"nudge mode ignores a file under a test directory","file":"services/core/src/01_shared/test/helpers.ts","mode":"nudge","expect":"silent"}
-{"name":"nudge mode ignores a .mock.ts file","file":"services/core/src/payment/Stripe.mock.ts","mode":"nudge","expect":"silent"}
-{"name":"nudge mode ignores a repository interface file","file":"services/core/src/payment/repository/Payment.repository.interface.ts","mode":"nudge","expect":"silent"}
-{"name":"nudge mode ignores the presenter interface of a usecase","file":"services/core/src/payment/Create/presenter/Create.presenter.ts","mode":"nudge","expect":"silent"}
+{"name":"nudge mode ignores a .mock.ts file","file":"services/core/src/orders/Carrier.mock.ts","mode":"nudge","expect":"silent"}
+{"name":"nudge mode ignores a repository interface file","file":"services/core/src/orders/repository/Order.repository.interface.ts","mode":"nudge","expect":"silent"}
+{"name":"nudge mode ignores the presenter interface of a usecase","file":"services/core/src/orders/Create/presenter/Create.presenter.ts","mode":"nudge","expect":"silent"}
 {"name":"nudge mode ignores the generated monitorKeys.ts","file":"services/core/src/00_adapters/logger/monitorKeys.ts","mode":"nudge","expect":"silent"}
-{"name":"nudge mode ignores another app","file":"services/dashboard/src/payment/Create.ts","mode":"nudge","expect":"silent"}
-{"name":"nudge mode ignores a library","file":"libs/kandor/src/payment/Button.ts","mode":"nudge","expect":"silent"}
+{"name":"nudge mode ignores another app","file":"services/dashboard/src/orders/Create.ts","mode":"nudge","expect":"silent"}
+{"name":"nudge mode ignores a library","file":"libs/kandor/src/orders/Button.ts","mode":"nudge","expect":"silent"}
 {"name":"nudge mode ignores a .ts file directly under services/core/src","file":"services/core/src/aws_ecs.ts","mode":"nudge","expect":"silent"}
-{"name":"nudge mode ignores a .json file in services/core/src","file":"services/core/src/payment/rates.json","mode":"nudge","expect":"silent"}
-{"name":"nudge mode logs a scaffold Write without nudging","file":"services/core/src/payment/NewThing/NewThing.usecase.ts","tool":"Write","new":true,"mode":"nudge","expect":"scaffold"}
+{"name":"nudge mode ignores a .json file in services/core/src","file":"services/core/src/orders/rates.json","mode":"nudge","expect":"silent"}
+{"name":"nudge mode logs a scaffold Write without nudging","file":"services/core/src/orders/NewThing/NewThing.usecase.ts","tool":"Write","new":true,"mode":"nudge","expect":"scaffold"}
 {"name":"nudge mode logs a scaffold Write into a brand new context without nudging","file":"services/core/src/brand-new/Thing.ts","tool":"Write","new":true,"mode":"nudge","expect":"scaffold"}
-{"name":"a scaffold Write does not use up the nudge of its session and context","file":"services/core/src/payment/Create.usecase.ts","runs":[{"file":"services/core/src/payment/NewThing/NewThing.usecase.ts","new":true},{}],"tool":"Write","pattern":"SN","expect":"nudged"}
-{"name":"shadow mode never nudges a repeated would-block","file":"services/core/src/payment/Create.usecase.ts","mode":"shadow","repeat":2,"expect":"logged"}
-{"name":"mode off prints nothing, logs nothing and creates no marker even when repeated","file":"services/core/src/payment/Create.usecase.ts","mode":"off","repeat":2,"expect":"silent"}
-{"name":"enforce still blocks and never nudges","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","repeat":2,"expect":"blocked"}
-{"name":"enforce stays silent when a spec was touched","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce","repeat":2,"expect":"silent"}
-{"name":"nudge mode logs but does not nudge when the input has no session_id","file":"services/core/src/payment/Create.usecase.ts","nosession":true,"mode":"nudge","expect":"logged"}
-{"name":"nudge mode logs but does not nudge when TMPDIR is unusable","file":"services/core/src/payment/Create.usecase.ts","env":"badtmpdir","mode":"nudge","expect":"logged"}
-{"name":"an unwritable log directory still lets nudge mode nudge","file":"services/core/src/payment/Create.usecase.ts","setup":["readonly-metrics ."],"skip_if_root":true,"mode":"nudge","log":false,"expect":"nudged"}
-{"name":"a worktree nudges once and logs to the main checkout","file":"services/core/src/payment/Create.usecase.ts","repo":"worktree","runs":[{},{}],"pattern":"NS","expect":"nudged"}
-{"name":"a symlinked checkout nudges and logs to the real checkout","file":"services/core/src/payment/Create.usecase.ts","repo":"symlink","mode":"nudge","expect":"nudged"}
-{"name":"nudge mode compares against the local main branch without origin/main","file":"services/core/src/payment/Create.usecase.ts","repo":"noorigin","mode":"nudge","expect":"nudged"}
-{"name":"nudge mode fails open outside a git repo","file":"services/core/src/payment/Create.usecase.ts","repo":"nogit","mode":"nudge","expect":"silent"}
-{"name":"nudge mode fails open without jq","file":"services/core/src/payment/Create.usecase.ts","env":"nojq","mode":"nudge","expect":"silent"}
-{"name":"nudge mode fails open without git","file":"services/core/src/payment/Create.usecase.ts","env":"nogit","mode":"nudge","expect":"silent"}
+{"name":"a scaffold Write does not use up the nudge of its session and context","file":"services/core/src/orders/Create.usecase.ts","runs":[{"file":"services/core/src/orders/NewThing/NewThing.usecase.ts","new":true},{}],"tool":"Write","pattern":"SN","expect":"nudged"}
+{"name":"shadow mode never nudges a repeated would-block","file":"services/core/src/orders/Create.usecase.ts","mode":"shadow","repeat":2,"expect":"logged"}
+{"name":"mode off prints nothing, logs nothing and creates no marker even when repeated","file":"services/core/src/orders/Create.usecase.ts","mode":"off","repeat":2,"expect":"silent"}
+{"name":"enforce still blocks and never nudges","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","repeat":2,"expect":"blocked"}
+{"name":"enforce stays silent when a spec was touched","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce","repeat":2,"expect":"silent"}
+{"name":"nudge mode logs but does not nudge when the input has no session_id","file":"services/core/src/orders/Create.usecase.ts","nosession":true,"mode":"nudge","expect":"logged"}
+{"name":"nudge mode logs but does not nudge when TMPDIR is unusable","file":"services/core/src/orders/Create.usecase.ts","env":"badtmpdir","mode":"nudge","expect":"logged"}
+{"name":"an unwritable log directory still lets nudge mode nudge","file":"services/core/src/orders/Create.usecase.ts","setup":["readonly-metrics ."],"skip_if_root":true,"mode":"nudge","log":false,"expect":"nudged"}
+{"name":"a worktree nudges once and logs to the main checkout","file":"services/core/src/orders/Create.usecase.ts","repo":"worktree","runs":[{},{}],"pattern":"NS","expect":"nudged"}
+{"name":"a symlinked checkout nudges and logs to the real checkout","file":"services/core/src/orders/Create.usecase.ts","repo":"symlink","mode":"nudge","expect":"nudged"}
+{"name":"nudge mode compares against the local main branch without origin/main","file":"services/core/src/orders/Create.usecase.ts","repo":"noorigin","mode":"nudge","expect":"nudged"}
+{"name":"nudge mode fails open outside a git repo","file":"services/core/src/orders/Create.usecase.ts","repo":"nogit","mode":"nudge","expect":"silent"}
+{"name":"nudge mode fails open without jq","file":"services/core/src/orders/Create.usecase.ts","env":"nojq","mode":"nudge","expect":"silent"}
+{"name":"nudge mode fails open without git","file":"services/core/src/orders/Create.usecase.ts","env":"nogit","mode":"nudge","expect":"silent"}
 {"name":"nudge mode fails open on malformed input","mode":"nudge","input":"{\"tool_input\": ","expect":"silent"}
 {"name":"nudge mode fails open on empty stdin","mode":"nudge","input":"","expect":"silent"}
 {"name":"nudge mode fails open on input without file_path","mode":"nudge","input":"{\"session_id\": \"s\", \"tool_input\": {\"command\": \"ls\"}, \"cwd\": \"/\"}","expect":"silent"}
-{"name":"mode NUDGE nudges like nudge","file":"services/core/src/payment/Create.usecase.ts","mode":"NUDGE","expect":"nudged"}
-{"name":"mode OFF does nothing like off","file":"services/core/src/payment/Create.usecase.ts","mode":"OFF","repeat":2,"expect":"silent"}
-{"name":"mode Shadow logs without nudging like shadow","file":"services/core/src/payment/Create.usecase.ts","mode":"Shadow","expect":"logged"}
-{"name":"a subagent edit does not consume the main agent's nudge","file":"services/core/src/payment/Create.usecase.ts","runs":[{"agent":"agent-1"},{}],"pattern":"NN","expect":"nudged"}
-{"name":"the main agent edit does not consume a subagent's nudge","file":"services/core/src/payment/Create.usecase.ts","runs":[{},{"agent":"agent-1"}],"pattern":"NN","expect":"nudged"}
-{"name":"the same subagent is nudged once per context","file":"services/core/src/payment/Create.usecase.ts","runs":[{"agent":"agent-1"},{"agent":"agent-1"}],"pattern":"NS","expect":"nudged"}
-{"name":"two subagents in one session are each nudged","file":"services/core/src/payment/Create.usecase.ts","runs":[{"agent":"agent-1"},{"agent":"agent-2"}],"pattern":"NN","expect":"nudged"}
-{"name":"nudge mode logs but does not nudge when TMPDIR is relative","file":"services/core/src/payment/Create.usecase.ts","env":"reltmpdir","mode":"nudge","expect":"logged"}
-{"name":"nudge mode logs but does not hang or nudge when a FIFO sits at the marker path","file":"services/core/src/payment/Create.usecase.ts","env":"fifo","mode":"nudge","expect":"logged"}
-{"name":"control characters in the session id are dropped before logging","file":"services/core/src/payment/Create.usecase.ts","runs":[{"session":"a\u0001b\tc"}],"expect":"nudged"}
-{"name":"no config: enforce is silent","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","noconfig":true}
-{"name":"no config: nudge is silent and creates no marker","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"nudge","noconfig":true}
-{"name":"no config: shadow is silent and logs nothing","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"shadow","noconfig":true}
-{"name":"no config: unset mode is silent","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"unset","noconfig":true}
-{"name":"a config with only protectedBranches leaves spec-first silent","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","configRaw":"{\"protectedBranches\": [\"main\"]}"}
-{"name":"an empty object config leaves spec-first silent","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","configRaw":"{}"}
-{"name":"an empty specFirst block is silent","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","configRaw":"{\"specFirst\": {}}"}
-{"name":"specFirst without roots is silent","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","configRaw":"{\"specFirst\": {\"sourceExtensions\": [\".ts\"]}}"}
-{"name":"specFirst with an empty roots list is silent","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","configRaw":"{\"specFirst\": {\"roots\": [], \"sourceExtensions\": [\".ts\"]}}"}
-{"name":"specFirst without sourceExtensions is silent","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","configRaw":"{\"specFirst\": {\"roots\": [{\"path\": \"services/core/src\"}]}}"}
-{"name":"malformed JSON config fails open","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","configRaw":"{not json"}
-{"name":"an empty config file fails open","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","configRaw":""}
-{"name":"a truncated config file fails open","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","configRaw":"{\"specFirst\": {\"roots\": ["}
-{"name":"a JSON array config fails open","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","configRaw":"[]"}
-{"name":"a JSON null config fails open","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","configRaw":"null"}
-{"name":"a JSON string config fails open","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","configRaw":"\"x\""}
-{"name":"specFirst as a string fails open","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","configRaw":"{\"specFirst\": \"x\"}"}
-{"name":"roots as a string fails open","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","configRaw":"{\"specFirst\": {\"roots\": \"x\", \"sourceExtensions\": [\".ts\"]}}"}
-{"name":"sourceExtensions as a string fails open","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","config":".specFirst.sourceExtensions = \".ts\""}
-{"name":"a root path that climbs out of the project is ignored","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","config":".specFirst.roots = [{\"path\": \"../x\"}]"}
-{"name":"a root path that is not a string is ignored","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","config":".specFirst.roots = [{\"path\": 5}]"}
-{"name":"a root with a non-numeric moduleDepth is ignored","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","config":".specFirst.roots[0].moduleDepth = \"x\""}
-{"name":"a root with moduleDepth 0 treats the whole root as one module","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","config":".specFirst.roots[0].moduleDepth = 0"}
-{"name":"a baseBranch that is not a name fails open","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","config":".baseBranch = {\"a\": 1}"}
-{"name":"a baseBranch with spaces fails open","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","config":".baseBranch = \"a b\""}
-{"name":"an unreadable config file fails open","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","configmode":"000","skip_if_root":true}
-{"name":"unset env, config enforce blocks","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","mode":"unset","config":".specFirst.mode = \"enforce\""}
-{"name":"unset env, config shadow logs","expect":"logged","file":"services/core/src/payment/Create.usecase.ts","mode":"unset","config":".specFirst.mode = \"shadow\""}
-{"name":"unset env, config without a mode nudges","expect":"nudged","file":"services/core/src/payment/Create.usecase.ts","mode":"unset","config":"del(.specFirst.mode)"}
-{"name":"unset env, config ENFORCE is case-insensitive","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","mode":"unset","config":".specFirst.mode = \"ENFORCE\""}
-{"name":"unset env, config nudge nudges","expect":"nudged","file":"services/core/src/payment/Create.usecase.ts","mode":"unset","config":".specFirst.mode = \"Nudge\""}
-{"name":"unset env, unknown config mode behaves as shadow","expect":"logged","file":"services/core/src/payment/Create.usecase.ts","mode":"unset","config":".specFirst.mode = \"banana\""}
-{"name":"unset env, non-string config mode behaves as shadow","expect":"logged","file":"services/core/src/payment/Create.usecase.ts","mode":"unset","config":".specFirst.mode = 5"}
-{"name":"unset env, config off is silent","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"unset","config":".specFirst.mode = \"off\""}
-{"name":"an empty env value falls back to the config mode","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","mode":"empty","config":".specFirst.mode = \"enforce\""}
-{"name":"env shadow wins over config enforce","expect":"logged","file":"services/core/src/payment/Create.usecase.ts","mode":"shadow","config":".specFirst.mode = \"enforce\""}
-{"name":"env enforce wins over config shadow","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","config":".specFirst.mode = \"shadow\""}
-{"name":"env off wins over config enforce","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"off","config":".specFirst.mode = \"enforce\""}
-{"name":"env nudge wins over config off","expect":"nudged","file":"services/core/src/payment/Create.usecase.ts","mode":"nudge","config":".specFirst.mode = \"off\""}
-{"name":"an unknown env value behaves as shadow even when the config enforces","expect":"logged","file":"services/core/src/payment/Create.usecase.ts","mode":"banana","config":".specFirst.mode = \"enforce\""}
+{"name":"mode NUDGE nudges like nudge","file":"services/core/src/orders/Create.usecase.ts","mode":"NUDGE","expect":"nudged"}
+{"name":"mode OFF does nothing like off","file":"services/core/src/orders/Create.usecase.ts","mode":"OFF","repeat":2,"expect":"silent"}
+{"name":"mode Shadow logs without nudging like shadow","file":"services/core/src/orders/Create.usecase.ts","mode":"Shadow","expect":"logged"}
+{"name":"a subagent edit does not consume the main agent's nudge","file":"services/core/src/orders/Create.usecase.ts","runs":[{"agent":"agent-1"},{}],"pattern":"NN","expect":"nudged"}
+{"name":"the main agent edit does not consume a subagent's nudge","file":"services/core/src/orders/Create.usecase.ts","runs":[{},{"agent":"agent-1"}],"pattern":"NN","expect":"nudged"}
+{"name":"the same subagent is nudged once per context","file":"services/core/src/orders/Create.usecase.ts","runs":[{"agent":"agent-1"},{"agent":"agent-1"}],"pattern":"NS","expect":"nudged"}
+{"name":"two subagents in one session are each nudged","file":"services/core/src/orders/Create.usecase.ts","runs":[{"agent":"agent-1"},{"agent":"agent-2"}],"pattern":"NN","expect":"nudged"}
+{"name":"nudge mode logs but does not nudge when TMPDIR is relative","file":"services/core/src/orders/Create.usecase.ts","env":"reltmpdir","mode":"nudge","expect":"logged"}
+{"name":"nudge mode logs but does not hang or nudge when a FIFO sits at the marker path","file":"services/core/src/orders/Create.usecase.ts","env":"fifo","mode":"nudge","expect":"logged"}
+{"name":"control characters in the session id are dropped before logging","file":"services/core/src/orders/Create.usecase.ts","runs":[{"session":"a\u0001b\tc"}],"expect":"nudged"}
+{"name":"no config: enforce is silent","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","noconfig":true}
+{"name":"no config: nudge is silent and creates no marker","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"nudge","noconfig":true}
+{"name":"no config: shadow is silent and logs nothing","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"shadow","noconfig":true}
+{"name":"no config: unset mode is silent","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"unset","noconfig":true}
+{"name":"a config with only protectedBranches leaves spec-first silent","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","configRaw":"{\"protectedBranches\": [\"main\"]}"}
+{"name":"an empty object config leaves spec-first silent","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","configRaw":"{}"}
+{"name":"an empty specFirst block is silent","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","configRaw":"{\"specFirst\": {}}"}
+{"name":"specFirst without roots is silent","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","configRaw":"{\"specFirst\": {\"sourceExtensions\": [\".ts\"]}}"}
+{"name":"specFirst with an empty roots list is silent","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","configRaw":"{\"specFirst\": {\"roots\": [], \"sourceExtensions\": [\".ts\"]}}"}
+{"name":"specFirst without sourceExtensions is silent","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","configRaw":"{\"specFirst\": {\"roots\": [{\"path\": \"services/core/src\"}]}}"}
+{"name":"malformed JSON config fails open","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","configRaw":"{not json"}
+{"name":"an empty config file fails open","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","configRaw":""}
+{"name":"a truncated config file fails open","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","configRaw":"{\"specFirst\": {\"roots\": ["}
+{"name":"a JSON array config fails open","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","configRaw":"[]"}
+{"name":"a JSON null config fails open","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","configRaw":"null"}
+{"name":"a JSON string config fails open","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","configRaw":"\"x\""}
+{"name":"specFirst as a string fails open","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","configRaw":"{\"specFirst\": \"x\"}"}
+{"name":"roots as a string fails open","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","configRaw":"{\"specFirst\": {\"roots\": \"x\", \"sourceExtensions\": [\".ts\"]}}"}
+{"name":"sourceExtensions as a string fails open","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","config":".specFirst.sourceExtensions = \".ts\""}
+{"name":"a root path that climbs out of the project is ignored","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","config":".specFirst.roots = [{\"path\": \"../x\"}]"}
+{"name":"a root path that is not a string is ignored","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","config":".specFirst.roots = [{\"path\": 5}]"}
+{"name":"a root with a non-numeric moduleDepth is ignored","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","config":".specFirst.roots[0].moduleDepth = \"x\""}
+{"name":"a root with moduleDepth 0 treats the whole root as one module","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","config":".specFirst.roots[0].moduleDepth = 0"}
+{"name":"a baseBranch that is not a name fails open","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","config":".baseBranch = {\"a\": 1}"}
+{"name":"a baseBranch with spaces fails open","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","config":".baseBranch = \"a b\""}
+{"name":"an unreadable config file fails open","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","configmode":"000","skip_if_root":true}
+{"name":"unset env, config enforce blocks","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","mode":"unset","config":".specFirst.mode = \"enforce\""}
+{"name":"unset env, config shadow logs","expect":"logged","file":"services/core/src/orders/Create.usecase.ts","mode":"unset","config":".specFirst.mode = \"shadow\""}
+{"name":"unset env, config without a mode nudges","expect":"nudged","file":"services/core/src/orders/Create.usecase.ts","mode":"unset","config":"del(.specFirst.mode)"}
+{"name":"unset env, config ENFORCE is case-insensitive","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","mode":"unset","config":".specFirst.mode = \"ENFORCE\""}
+{"name":"unset env, config nudge nudges","expect":"nudged","file":"services/core/src/orders/Create.usecase.ts","mode":"unset","config":".specFirst.mode = \"Nudge\""}
+{"name":"unset env, unknown config mode behaves as shadow","expect":"logged","file":"services/core/src/orders/Create.usecase.ts","mode":"unset","config":".specFirst.mode = \"banana\""}
+{"name":"unset env, non-string config mode behaves as shadow","expect":"logged","file":"services/core/src/orders/Create.usecase.ts","mode":"unset","config":".specFirst.mode = 5"}
+{"name":"unset env, config off is silent","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"unset","config":".specFirst.mode = \"off\""}
+{"name":"an empty env value falls back to the config mode","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","mode":"empty","config":".specFirst.mode = \"enforce\""}
+{"name":"env shadow wins over config enforce","expect":"logged","file":"services/core/src/orders/Create.usecase.ts","mode":"shadow","config":".specFirst.mode = \"enforce\""}
+{"name":"env enforce wins over config shadow","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","config":".specFirst.mode = \"shadow\""}
+{"name":"env off wins over config enforce","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"off","config":".specFirst.mode = \"enforce\""}
+{"name":"env nudge wins over config off","expect":"nudged","file":"services/core/src/orders/Create.usecase.ts","mode":"nudge","config":".specFirst.mode = \"off\""}
+{"name":"an unknown env value behaves as shadow even when the config enforces","expect":"logged","file":"services/core/src/orders/Create.usecase.ts","mode":"banana","config":".specFirst.mode = \"enforce\""}
 {"name":"custom root: a production file with no test is blocked","expect":"blocked","file":"src/billing/pay.py","mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)","context":"billing"}
 {"name":"custom root: a test_ file is never gated","expect":"silent","file":"src/billing/test_pay.py","mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)"}
 {"name":"custom root: a _test file is never gated","expect":"silent","file":"src/billing/pay_test.py","mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)"}
@@ -233,11 +233,11 @@
 {"name":"custom root: a file directly under the root is not gated","expect":"silent","file":"src/pay.py","mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)"}
 {"name":"custom root: a test in the same module allows the edit","expect":"silent","file":"src/billing/pay.py","setup":["untracked src/billing/test_pay.py"],"mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)"}
 {"name":"custom root: a committed test in the same module allows the edit","expect":"silent","file":"src/billing/pay.py","setup":["commit src/billing/sub/pay_test.py"],"mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)"}
-{"name":"custom root: a test in another module is not enough","expect":"blocked","file":"src/billing/pay.py","setup":["untracked src/ledger/test_post.py"],"mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)","context":"billing"}
+{"name":"custom root: a test in another module is not enough","expect":"blocked","file":"src/billing/pay.py","setup":["untracked src/shipping/test_post.py"],"mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)","context":"billing"}
 {"name":"custom root: a configured ignore regex is never gated","expect":"silent","file":"src/billing/migrations/0001.py","mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)"}
 {"name":"custom root: built-in test directories are never gated","expect":"silent","file":"src/billing/tests/helper.py","mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)"}
 {"name":"custom root: built-in fixture suffixes are never gated","expect":"silent","file":"src/billing/pay.fixture.py","mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)"}
-{"name":"custom root: the nested api layout is no longer gated","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)"}
+{"name":"custom root: the nested api layout is no longer gated","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)"}
 {"name":"custom root: a shared module accepts a test in any module","expect":"silent","file":"src/lib_core/util.py","setup":["untracked src/billing/test_pay.py"],"mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)"}
 {"name":"custom root: a shared module with no test anywhere is blocked","expect":"blocked","file":"src/lib_core/util.py","mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)","context":"lib_core"}
 {"name":"custom root: the numeric shared pattern is not applied to this config","expect":"blocked","file":"src/00_adapters/util.py","setup":["untracked src/billing/test_pay.py"],"mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)","context":"00_adapters"}
@@ -247,65 +247,65 @@
 {"name":"custom root: a scaffold Write is logged with its own context","expect":"scaffold","file":"src/billing/new.py","tool":"Write","new":true,"mode":"shadow","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)","context":"billing"}
 {"name":"custom root: nudge names its scope and has no rule file sentence","expect":"nudged","file":"src/billing/pay.py","mode":"nudge","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)","context":"billing","scope":"src/billing/"}
 {"name":"custom root: a shared module nudge names the whole root","expect":"nudged","file":"src/lib_core/util.py","mode":"nudge","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"sharedModulePattern\": \"^lib_\"}] | .specFirst.sourceExtensions = [\".py\"] | .specFirst.testPatterns = [\"test_*.py\", \"*_test.py\"] | .specFirst.ignoreRegex = [\"/migrations/\"] | del(.specFirst.ruleFile)","context":"lib_core","scope":"src/"}
-{"name":"moduleDepth 2: a spec in a sibling module of the same depth allows the edit","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/ledger/Post.usecase.int.spec.ts"],"mode":"enforce","config":".specFirst.roots = [{\"path\": \"services\", \"moduleDepth\": 2}]"}
-{"name":"moduleDepth 2: a spec under another app is not enough","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/dashboard/src/Widget.spec.ts"],"mode":"enforce","config":".specFirst.roots = [{\"path\": \"services\", \"moduleDepth\": 2}]","context":"core/src"}
+{"name":"moduleDepth 2: a spec in a sibling module of the same depth allows the edit","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/shipping/Post.usecase.int.spec.ts"],"mode":"enforce","config":".specFirst.roots = [{\"path\": \"services\", \"moduleDepth\": 2}]"}
+{"name":"moduleDepth 2: a spec under another app is not enough","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/dashboard/src/Widget.spec.ts"],"mode":"enforce","config":".specFirst.roots = [{\"path\": \"services\", \"moduleDepth\": 2}]","context":"core/src"}
 {"name":"moduleDepth 2: a file one level below the root is not gated","expect":"silent","file":"services/core/Thing.ts","mode":"enforce","config":".specFirst.roots = [{\"path\": \"services\", \"moduleDepth\": 2}]"}
 {"name":"moduleDepth 2: a file directly in the module is gated","expect":"blocked","file":"services/core/src/Thing.ts","mode":"enforce","config":".specFirst.roots = [{\"path\": \"services\", \"moduleDepth\": 2}]","context":"core/src"}
-{"name":"moduleDepth 2: nudge names the two-level scope","expect":"nudged","file":"services/core/src/payment/Create.usecase.ts","mode":"nudge","config":".specFirst.roots = [{\"path\": \"services\", \"moduleDepth\": 2}]","context":"core/src","scope":"services/core/src/"}
+{"name":"moduleDepth 2: nudge names the two-level scope","expect":"nudged","file":"services/core/src/orders/Create.usecase.ts","mode":"nudge","config":".specFirst.roots = [{\"path\": \"services\", \"moduleDepth\": 2}]","context":"core/src","scope":"services/core/src/"}
 {"name":"two roots: the second root is gated","expect":"blocked","file":"libs/kandor/src/Button.ts","mode":"enforce","config":".specFirst.roots += [{\"path\": \"libs\", \"moduleDepth\": 1}]","context":"kandor"}
 {"name":"two roots: a spec in the second root allows its edit","expect":"silent","file":"libs/kandor/src/Button.ts","setup":["untracked libs/kandor/Button.spec.ts"],"mode":"enforce","config":".specFirst.roots += [{\"path\": \"libs\", \"moduleDepth\": 1}]"}
-{"name":"two roots: the first root is still gated","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","config":".specFirst.roots += [{\"path\": \"libs\", \"moduleDepth\": 1}]"}
-{"name":"two roots: a spec in the other root is not enough","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked libs/kandor/Button.spec.ts"],"mode":"enforce","config":".specFirst.roots += [{\"path\": \"libs\", \"moduleDepth\": 1}]"}
-{"name":"a root written with ./ and a trailing slash still matches","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","config":".specFirst.roots[0].path = \"./services/core/src/\""}
-{"name":"a root without a shared module pattern treats NN_ directories as modules","expect":"blocked","file":"services/core/src/00_adapters/logger/logger.ts","setup":["untracked services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce","config":"del(.specFirst.roots[0].sharedModulePattern)","context":"00_adapters"}
+{"name":"two roots: the first root is still gated","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","config":".specFirst.roots += [{\"path\": \"libs\", \"moduleDepth\": 1}]"}
+{"name":"two roots: a spec in the other root is not enough","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked libs/kandor/Button.spec.ts"],"mode":"enforce","config":".specFirst.roots += [{\"path\": \"libs\", \"moduleDepth\": 1}]"}
+{"name":"a root written with ./ and a trailing slash still matches","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","config":".specFirst.roots[0].path = \"./services/core/src/\""}
+{"name":"a root without a shared module pattern treats NN_ directories as modules","expect":"blocked","file":"services/core/src/00_adapters/logger/logger.ts","setup":["untracked services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce","config":"del(.specFirst.roots[0].sharedModulePattern)","context":"00_adapters"}
 {"name":"a root without a shared module pattern accepts a spec in the module itself","expect":"silent","file":"services/core/src/00_adapters/logger/logger.ts","setup":["untracked services/core/src/00_adapters/logger/logger.unit.spec.ts"],"mode":"enforce","config":"del(.specFirst.roots[0].sharedModulePattern)"}
-{"name":"several source extensions are all gated","expect":"blocked","file":"services/core/src/payment/View.tsx","mode":"enforce","config":".specFirst.sourceExtensions = [\".ts\", \".tsx\"]"}
-{"name":"baseBranch develop without origin/develop fails open","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","config":".baseBranch = \"develop\""}
-{"name":"baseBranch develop with origin/develop gates","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","setup":["basebranch develop"],"mode":"enforce","config":".baseBranch = \"develop\""}
-{"name":"baseBranch develop counts a spec committed ahead of origin/develop","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","setup":["basebranch develop","commit services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce","config":".baseBranch = \"develop\""}
-{"name":"baseBranch develop: a repo without a configured main still resolves origin/develop only","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","repo":"noorigin","mode":"enforce","config":".baseBranch = \"develop\""}
-{"name":"a baseBranch with a slash is compared as origin/<baseBranch>","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","setup":["basebranch release/1"],"mode":"enforce","config":".baseBranch = \"release/1\""}
-{"name":"no baseBranch defaults to main","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","config":"del(.baseBranch)"}
-{"name":"default test patterns count a .spec file of any extension","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/payment/Create.spec.js"],"mode":"enforce","config":"del(.specFirst.testPatterns)"}
-{"name":"default test patterns count a _test file","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/payment/create_test.go"],"mode":"enforce","config":"del(.specFirst.testPatterns)"}
-{"name":"default test patterns count a test_ file","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/payment/test_create.py"],"mode":"enforce","config":"del(.specFirst.testPatterns)"}
-{"name":"default test patterns leave a plain file uncounted","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/payment/Create.helper.ts"],"mode":"enforce","config":"del(.specFirst.testPatterns)"}
-{"name":"default test patterns never gate a test file","expect":"silent","file":"services/core/src/payment/create_test.ts","mode":"enforce","config":"del(.specFirst.testPatterns)"}
-{"name":"an empty testPatterns list falls back to the defaults","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/payment/Create.spec.js"],"mode":"enforce","config":".specFirst.testPatterns = []"}
-{"name":"custom test patterns replace the defaults","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/payment/Create.spec.ts"],"mode":"enforce","config":".specFirst.testPatterns = [\"*.check.ts\"]"}
-{"name":"a custom test pattern counts","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","setup":["untracked services/core/src/payment/Create.check.ts"],"mode":"enforce","config":".specFirst.testPatterns = [\"*.check.ts\"]"}
-{"name":"without ignoreRegex a builder file is gated","expect":"blocked","file":"services/core/src/payment/Payment.builder.ts","mode":"enforce","config":"del(.specFirst.ignoreRegex)"}
+{"name":"several source extensions are all gated","expect":"blocked","file":"services/core/src/orders/View.tsx","mode":"enforce","config":".specFirst.sourceExtensions = [\".ts\", \".tsx\"]"}
+{"name":"baseBranch develop without origin/develop fails open","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","config":".baseBranch = \"develop\""}
+{"name":"baseBranch develop with origin/develop gates","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","setup":["basebranch develop"],"mode":"enforce","config":".baseBranch = \"develop\""}
+{"name":"baseBranch develop counts a spec committed ahead of origin/develop","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","setup":["basebranch develop","commit services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce","config":".baseBranch = \"develop\""}
+{"name":"baseBranch develop: a repo without a configured main still resolves origin/develop only","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","repo":"noorigin","mode":"enforce","config":".baseBranch = \"develop\""}
+{"name":"a baseBranch with a slash is compared as origin/<baseBranch>","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","setup":["basebranch release/1"],"mode":"enforce","config":".baseBranch = \"release/1\""}
+{"name":"no baseBranch defaults to main","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","config":"del(.baseBranch)"}
+{"name":"default test patterns count a .spec file of any extension","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/orders/Create.spec.js"],"mode":"enforce","config":"del(.specFirst.testPatterns)"}
+{"name":"default test patterns count a _test file","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/orders/create_test.go"],"mode":"enforce","config":"del(.specFirst.testPatterns)"}
+{"name":"default test patterns count a test_ file","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/orders/test_create.py"],"mode":"enforce","config":"del(.specFirst.testPatterns)"}
+{"name":"default test patterns leave a plain file uncounted","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/orders/Create.helper.ts"],"mode":"enforce","config":"del(.specFirst.testPatterns)"}
+{"name":"default test patterns never gate a test file","expect":"silent","file":"services/core/src/orders/create_test.ts","mode":"enforce","config":"del(.specFirst.testPatterns)"}
+{"name":"an empty testPatterns list falls back to the defaults","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/orders/Create.spec.js"],"mode":"enforce","config":".specFirst.testPatterns = []"}
+{"name":"custom test patterns replace the defaults","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/orders/Create.spec.ts"],"mode":"enforce","config":".specFirst.testPatterns = [\"*.check.ts\"]"}
+{"name":"a custom test pattern counts","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","setup":["untracked services/core/src/orders/Create.check.ts"],"mode":"enforce","config":".specFirst.testPatterns = [\"*.check.ts\"]"}
+{"name":"without ignoreRegex a builder file is gated","expect":"blocked","file":"services/core/src/orders/Order.builder.ts","mode":"enforce","config":"del(.specFirst.ignoreRegex)"}
 {"name":"without ignoreRegex a .d.ts file is gated","expect":"blocked","file":"services/core/src/00_adapters/database/database.types.d.ts","mode":"enforce","config":"del(.specFirst.ignoreRegex)","context":"00_adapters"}
-{"name":"without ignoreRegex a built-in ignored mock stays ignored","expect":"silent","file":"services/core/src/payment/Stripe.mock.ts","mode":"enforce","config":"del(.specFirst.ignoreRegex)"}
-{"name":"without ignoreRegex a built-in test directory stays ignored","expect":"silent","file":"services/core/src/payment/__mocks__/stripe.ts","mode":"enforce","config":"del(.specFirst.ignoreRegex)"}
-{"name":"a custom ignore regex exempts a generated file","expect":"silent","file":"services/core/src/payment/schema.gen.ts","mode":"enforce","config":".specFirst.ignoreRegex += [\"\\\\.gen\\\\.ts$\"]"}
-{"name":"the same file is gated without that regex","expect":"blocked","file":"services/core/src/payment/schema.gen.ts","mode":"enforce"}
-{"name":"a custom ignore regex can exempt a directory","expect":"silent","file":"services/core/src/payment/generated/types.ts","mode":"enforce","config":".specFirst.ignoreRegex += [\"/generated/\"]"}
-{"name":"an invalid ignore regex neither crashes nor exempts","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","config":".specFirst.ignoreRegex += [\"(\"]"}
-{"name":"an ignoreRegex that is not a list is ignored","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","config":".specFirst.ignoreRegex = \"x\""}
-{"name":"a config without ruleFile still blocks with a stderr reason","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce","config":"del(.specFirst.ruleFile)"}
-{"name":"a config without ruleFile nudges without naming a rule file","expect":"nudged","file":"services/core/src/payment/Create.usecase.ts","mode":"nudge","config":"del(.specFirst.ruleFile)"}
-{"name":"the project is found from cwd when CLAUDE_PROJECT_DIR is unset (blocked)","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","env":"noprojdir","mode":"enforce"}
-{"name":"a CLAUDE_PROJECT_DIR that does not exist falls back to cwd (blocked)","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","env":"badprojdir","mode":"enforce"}
-{"name":"a worktree finds its own config","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","repo":"worktree","mode":"enforce","config":".specFirst.mode = \"enforce\""}
-{"name":"a symlinked checkout finds its config","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","repo":"symlink","mode":"unset","config":".specFirst.mode = \"enforce\""}
-{"name":"a config in a repo without git still fails open","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","repo":"nogit","mode":"unset","config":".specFirst.mode = \"enforce\""}
-{"name":"without CLAUDE_PLUGIN_DATA nothing is logged and shadow stays silent","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","env":"nodata","mode":"shadow"}
-{"name":"without CLAUDE_PLUGIN_DATA a scaffold is not logged","expect":"silent","file":"services/core/src/payment/NewThing/NewThing.usecase.ts","tool":"Write","new":true,"env":"nodata","mode":"shadow"}
-{"name":"without CLAUDE_PLUGIN_DATA nudge mode still nudges","expect":"nudged","file":"services/core/src/payment/Create.usecase.ts","env":"nodata","mode":"nudge","log":false}
-{"name":"without CLAUDE_PLUGIN_DATA enforce still blocks","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","env":"nodata","mode":"enforce"}
-{"name":"an unusable CLAUDE_PLUGIN_DATA loses only the log line","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","env":"baddata","mode":"shadow"}
-{"name":"an unusable CLAUDE_PLUGIN_DATA still lets nudge mode nudge","expect":"nudged","file":"services/core/src/payment/Create.usecase.ts","env":"baddata","mode":"nudge","log":false}
-{"name":"a missing CLAUDE_PLUGIN_DATA directory is created for the log","expect":"logged","file":"services/core/src/payment/Create.usecase.ts","mode":"shadow"}
-{"name":"a new spec file is never logged as scaffolding","file":"services/core/src/payment/New.int.spec.ts","tool":"Write","new":true,"mode":"shadow","expect":"silent"}
-{"name":"a new file matching a configured test pattern is never logged","file":"services/core/src/payment/New.check.ts","tool":"Write","new":true,"mode":"shadow","config":".specFirst.testPatterns = [\"*.check.ts\"]","expect":"silent"}
-{"name":"a new ignored file is never logged","file":"services/core/src/payment/New.gen.ts","tool":"Write","new":true,"mode":"shadow","config":".specFirst.ignoreRegex += [\"\\\\.gen\\\\.ts$\"]","expect":"silent"}
-{"name":"a new file in a built-in test directory is never logged","file":"services/core/src/payment/fixtures/seed.ts","tool":"Write","new":true,"mode":"shadow","expect":"silent"}
+{"name":"without ignoreRegex a built-in ignored mock stays ignored","expect":"silent","file":"services/core/src/orders/Carrier.mock.ts","mode":"enforce","config":"del(.specFirst.ignoreRegex)"}
+{"name":"without ignoreRegex a built-in test directory stays ignored","expect":"silent","file":"services/core/src/orders/__mocks__/carrier.ts","mode":"enforce","config":"del(.specFirst.ignoreRegex)"}
+{"name":"a custom ignore regex exempts a generated file","expect":"silent","file":"services/core/src/orders/schema.gen.ts","mode":"enforce","config":".specFirst.ignoreRegex += [\"\\\\.gen\\\\.ts$\"]"}
+{"name":"the same file is gated without that regex","expect":"blocked","file":"services/core/src/orders/schema.gen.ts","mode":"enforce"}
+{"name":"a custom ignore regex can exempt a directory","expect":"silent","file":"services/core/src/orders/generated/types.ts","mode":"enforce","config":".specFirst.ignoreRegex += [\"/generated/\"]"}
+{"name":"an invalid ignore regex neither crashes nor exempts","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","config":".specFirst.ignoreRegex += [\"(\"]"}
+{"name":"an ignoreRegex that is not a list is ignored","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","config":".specFirst.ignoreRegex = \"x\""}
+{"name":"a config without ruleFile still blocks with a stderr reason","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce","config":"del(.specFirst.ruleFile)"}
+{"name":"a config without ruleFile nudges without naming a rule file","expect":"nudged","file":"services/core/src/orders/Create.usecase.ts","mode":"nudge","config":"del(.specFirst.ruleFile)"}
+{"name":"the project is found from cwd when CLAUDE_PROJECT_DIR is unset (blocked)","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","env":"noprojdir","mode":"enforce"}
+{"name":"a CLAUDE_PROJECT_DIR that does not exist falls back to cwd (blocked)","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","env":"badprojdir","mode":"enforce"}
+{"name":"a worktree finds its own config","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","repo":"worktree","mode":"enforce","config":".specFirst.mode = \"enforce\""}
+{"name":"a symlinked checkout finds its config","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","repo":"symlink","mode":"unset","config":".specFirst.mode = \"enforce\""}
+{"name":"a config in a repo without git still fails open","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","repo":"nogit","mode":"unset","config":".specFirst.mode = \"enforce\""}
+{"name":"without CLAUDE_PLUGIN_DATA nothing is logged and shadow stays silent","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","env":"nodata","mode":"shadow"}
+{"name":"without CLAUDE_PLUGIN_DATA a scaffold is not logged","expect":"silent","file":"services/core/src/orders/NewThing/NewThing.usecase.ts","tool":"Write","new":true,"env":"nodata","mode":"shadow"}
+{"name":"without CLAUDE_PLUGIN_DATA nudge mode still nudges","expect":"nudged","file":"services/core/src/orders/Create.usecase.ts","env":"nodata","mode":"nudge","log":false}
+{"name":"without CLAUDE_PLUGIN_DATA enforce still blocks","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","env":"nodata","mode":"enforce"}
+{"name":"an unusable CLAUDE_PLUGIN_DATA loses only the log line","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","env":"baddata","mode":"shadow"}
+{"name":"an unusable CLAUDE_PLUGIN_DATA still lets nudge mode nudge","expect":"nudged","file":"services/core/src/orders/Create.usecase.ts","env":"baddata","mode":"nudge","log":false}
+{"name":"a missing CLAUDE_PLUGIN_DATA directory is created for the log","expect":"logged","file":"services/core/src/orders/Create.usecase.ts","mode":"shadow"}
+{"name":"a new spec file is never logged as scaffolding","file":"services/core/src/orders/New.int.spec.ts","tool":"Write","new":true,"mode":"shadow","expect":"silent"}
+{"name":"a new file matching a configured test pattern is never logged","file":"services/core/src/orders/New.check.ts","tool":"Write","new":true,"mode":"shadow","config":".specFirst.testPatterns = [\"*.check.ts\"]","expect":"silent"}
+{"name":"a new ignored file is never logged","file":"services/core/src/orders/New.gen.ts","tool":"Write","new":true,"mode":"shadow","config":".specFirst.ignoreRegex += [\"\\\\.gen\\\\.ts$\"]","expect":"silent"}
+{"name":"a new file in a built-in test directory is never logged","file":"services/core/src/orders/fixtures/seed.ts","tool":"Write","new":true,"mode":"shadow","expect":"silent"}
 {"name":"example config: an existing .ts file with no test is blocked","expect":"blocked","file":"src/billing/Invoice.ts","mode":"enforce","base":"example"}
 {"name":"example config: an existing .tsx file with no test is blocked","expect":"blocked","file":"src/billing/Invoice.tsx","mode":"enforce","base":"example"}
 {"name":"example config: a test in the same module allows the edit","expect":"silent","file":"src/billing/Invoice.ts","setup":["untracked src/billing/Invoice.spec.ts"],"mode":"enforce","base":"example"}
 {"name":"example config: a tsx test in the same module allows the edit","expect":"silent","file":"src/billing/Invoice.ts","setup":["untracked src/billing/Invoice.test.tsx"],"mode":"enforce","base":"example"}
-{"name":"example config: a test in another module is not enough","expect":"blocked","file":"src/billing/Invoice.ts","setup":["untracked src/ledger/Post.spec.ts"],"mode":"enforce","base":"example"}
+{"name":"example config: a test in another module is not enough","expect":"blocked","file":"src/billing/Invoice.ts","setup":["untracked src/shipping/Post.spec.ts"],"mode":"enforce","base":"example"}
 {"name":"example config: a test file is never gated","expect":"silent","file":"src/billing/Invoice.spec.tsx","mode":"enforce","base":"example"}
 {"name":"example config: a .d.ts file is never gated","expect":"silent","file":"src/billing/types.d.ts","mode":"enforce","base":"example"}
 {"name":"example config: a generated directory is never gated","expect":"silent","file":"src/billing/generated/api.ts","mode":"enforce","base":"example"}
@@ -316,8 +316,8 @@
 {"name":"example config: common is shared too and blocks with no test anywhere","expect":"blocked","file":"src/common/util.ts","mode":"enforce","base":"example"}
 {"name":"example config: default mode nudges and names its module","expect":"nudged","file":"src/billing/Invoice.ts","mode":"unset","base":"example","context":"billing","scope":"src/billing/"}
 {"name":"example config: shadow logs the module","expect":"logged","file":"src/billing/Invoice.ts","mode":"shadow","base":"example","context":"billing"}
-{"name":"the nested api fixture still gates its original layout","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","mode":"enforce"}
-{"name":"the nested api fixture still shares numeric-prefixed layers","expect":"silent","file":"services/core/src/00_adapters/logger/logger.ts","setup":["untracked services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce"}
+{"name":"the nested api fixture still gates its original layout","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","mode":"enforce"}
+{"name":"the nested api fixture still shares numeric-prefixed layers","expect":"silent","file":"services/core/src/00_adapters/logger/logger.ts","setup":["untracked services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce"}
 {"name":"flat root: an existing file directly under the root is gated","expect":"blocked","file":"src/slugify.js","mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 0, \"testRoots\": [\"test\", \"tests\"]}] | .specFirst.sourceExtensions = [\".js\"] | .specFirst.testPatterns = [\"*.test.js\", \"*.spec.js\"] | .specFirst.ignoreRegex = [] | del(.specFirst.ruleFile)"}
 {"name":"flat root: a test under a test root allows the edit","expect":"silent","file":"src/slugify.js","setup":["untracked test/slugify.test.js"],"mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 0, \"testRoots\": [\"test\", \"tests\"]}] | .specFirst.sourceExtensions = [\".js\"] | .specFirst.testPatterns = [\"*.test.js\", \"*.spec.js\"] | .specFirst.ignoreRegex = [] | del(.specFirst.ruleFile)"}
 {"name":"flat root: a test under the second test root allows the edit","expect":"silent","file":"src/slugify.js","setup":["untracked tests/unit/slugify.spec.js"],"mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 0, \"testRoots\": [\"test\", \"tests\"]}] | .specFirst.sourceExtensions = [\".js\"] | .specFirst.testPatterns = [\"*.test.js\", \"*.spec.js\"] | .specFirst.ignoreRegex = [] | del(.specFirst.ruleFile)"}
@@ -341,25 +341,25 @@
 {"name":"flat root: a sharedModulePattern has no effect","expect":"blocked","file":"src/slugify.js","mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 0, \"testRoots\": [\"test\", \"tests\"]}] | .specFirst.sourceExtensions = [\".js\"] | .specFirst.testPatterns = [\"*.test.js\", \"*.spec.js\"] | .specFirst.ignoreRegex = [] | del(.specFirst.ruleFile) | .specFirst.roots[0].sharedModulePattern = \"^x\""}
 {"name":"testRoots on a moduleDepth 1 root: a test under the test root allows the edit","expect":"silent","file":"src/billing/pay.js","setup":["untracked test/pay.test.js"],"mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"testRoots\": [\"test\"]}] | .specFirst.sourceExtensions = [\".js\"] | .specFirst.testPatterns = [\"*.test.js\"]"}
 {"name":"testRoots on a moduleDepth 1 root: without one the edit is blocked","expect":"blocked","file":"src/billing/pay.js","mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"testRoots\": [\"test\"]}] | .specFirst.sourceExtensions = [\".js\"] | .specFirst.testPatterns = [\"*.test.js\"]"}
-{"name":"testRoots on a moduleDepth 1 root: a test in another module is still not enough","expect":"blocked","file":"src/billing/pay.js","setup":["untracked src/ledger/x.test.js"],"mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"testRoots\": [\"test\"]}] | .specFirst.sourceExtensions = [\".js\"] | .specFirst.testPatterns = [\"*.test.js\"]"}
+{"name":"testRoots on a moduleDepth 1 root: a test in another module is still not enough","expect":"blocked","file":"src/billing/pay.js","setup":["untracked src/shipping/x.test.js"],"mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 1, \"testRoots\": [\"test\"]}] | .specFirst.sourceExtensions = [\".js\"] | .specFirst.testPatterns = [\"*.test.js\"]"}
 {"name":"testRoots that climb out of the project are ignored","expect":"blocked","file":"src/slugify.js","setup":["untracked test/slugify.test.js"],"mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 0, \"testRoots\": [\"test\", \"tests\"]}] | .specFirst.sourceExtensions = [\".js\"] | .specFirst.testPatterns = [\"*.test.js\", \"*.spec.js\"] | .specFirst.ignoreRegex = [] | del(.specFirst.ruleFile) | .specFirst.roots[0].testRoots = [\"../test\"]"}
 {"name":"testRoots that is not a list is ignored","expect":"blocked","file":"src/slugify.js","setup":["untracked test/slugify.test.js"],"mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 0, \"testRoots\": [\"test\", \"tests\"]}] | .specFirst.sourceExtensions = [\".js\"] | .specFirst.testPatterns = [\"*.test.js\", \"*.spec.js\"] | .specFirst.ignoreRegex = [] | del(.specFirst.ruleFile) | .specFirst.roots[0].testRoots = \"test\""}
 {"name":"a negative moduleDepth is ignored","expect":"silent","file":"src/slugify.js","mode":"enforce","config":".specFirst.roots = [{\"path\": \"src\", \"moduleDepth\": 0, \"testRoots\": [\"test\", \"tests\"]}] | .specFirst.sourceExtensions = [\".js\"] | .specFirst.testPatterns = [\"*.test.js\", \"*.spec.js\"] | .specFirst.ignoreRegex = [] | del(.specFirst.ruleFile) | .specFirst.roots[0].moduleDepth = -1"}
 {"name":"the original layout keeps moduleDepth 1 semantics: a file directly under the root is not gated","expect":"silent","file":"services/core/src/aws_ecs.ts","mode":"enforce"}
-{"name":"no remote: a baseline spec on the local main does not count","expect":"blocked","file":"services/core/src/payment/Existing.usecase.ts","repo":"noorigin","mode":"enforce"}
-{"name":"no remote: a spec committed ahead of the local main allows the edit","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","repo":"noorigin","setup":["commit services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce"}
-{"name":"no remote: a spec deleted in a branch commit does not count","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","repo":"noorigin","setup":["commitdelete services/core/src/payment/Existing.usecase.int.spec.ts"],"mode":"enforce"}
-{"name":"no remote: a scaffold Write is logged as not blocking","expect":"scaffold","file":"services/core/src/payment/NewThing/NewThing.usecase.ts","repo":"noorigin","tool":"Write","new":true,"mode":"shadow"}
-{"name":"no remote: a scaffold Write is allowed in enforce mode","expect":"silent","file":"services/core/src/payment/NewThing/NewThing.usecase.ts","repo":"noorigin","tool":"Write","new":true,"mode":"enforce"}
-{"name":"no remote and no local main fails open in enforce mode","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","repo":"nobase","mode":"enforce"}
-{"name":"no remote and no local main fails open in shadow mode","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","repo":"nobase","mode":"shadow"}
-{"name":"no remote and no local main fails open in nudge mode","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","repo":"nobase","mode":"nudge"}
-{"name":"no remote and no local main still honors a spec in the working tree","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","repo":"nobase","setup":["untracked services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce"}
-{"name":"no remote: a local baseBranch develop is the comparison base","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","repo":"noorigin","setup":["localbranch develop"],"mode":"enforce","config":".baseBranch = \"develop\""}
-{"name":"no remote: a spec committed ahead of local develop allows the edit","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","repo":"noorigin","setup":["localbranch develop","commit services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce","config":".baseBranch = \"develop\""}
-{"name":"no remote and no local develop fails open","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","repo":"noorigin","mode":"enforce","config":".baseBranch = \"develop\""}
-{"name":"the remote ref wins over a local branch of the same name","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","setup":["commit services/core/src/payment/Create.usecase.int.spec.ts","localbranchhead develop","basebranch develop"],"mode":"enforce","config":".baseBranch = \"develop\""}
-{"name":"a local branch is not used when the remote ref exists and no spec is ahead of it","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","setup":["localbranchhead develop","basebranch develop"],"mode":"enforce","config":".baseBranch = \"develop\""}
-{"name":"a minimal PATH finds jq and git through the fallback directory (enforce)","expect":"blocked","file":"services/core/src/payment/Create.usecase.ts","env":"minpath","mode":"enforce"}
-{"name":"a minimal PATH finds jq and git through the fallback directory (nudge)","expect":"nudged","file":"services/core/src/payment/Create.usecase.ts","env":"minpath","mode":"nudge"}
-{"name":"a minimal PATH with a spec touched stays silent","expect":"silent","file":"services/core/src/payment/Create.usecase.ts","env":"minpath","setup":["untracked services/core/src/payment/Create.usecase.int.spec.ts"],"mode":"enforce"}
+{"name":"no remote: a baseline spec on the local main does not count","expect":"blocked","file":"services/core/src/orders/Existing.usecase.ts","repo":"noorigin","mode":"enforce"}
+{"name":"no remote: a spec committed ahead of the local main allows the edit","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","repo":"noorigin","setup":["commit services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce"}
+{"name":"no remote: a spec deleted in a branch commit does not count","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","repo":"noorigin","setup":["commitdelete services/core/src/orders/Existing.usecase.int.spec.ts"],"mode":"enforce"}
+{"name":"no remote: a scaffold Write is logged as not blocking","expect":"scaffold","file":"services/core/src/orders/NewThing/NewThing.usecase.ts","repo":"noorigin","tool":"Write","new":true,"mode":"shadow"}
+{"name":"no remote: a scaffold Write is allowed in enforce mode","expect":"silent","file":"services/core/src/orders/NewThing/NewThing.usecase.ts","repo":"noorigin","tool":"Write","new":true,"mode":"enforce"}
+{"name":"no remote and no local main fails open in enforce mode","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","repo":"nobase","mode":"enforce"}
+{"name":"no remote and no local main fails open in shadow mode","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","repo":"nobase","mode":"shadow"}
+{"name":"no remote and no local main fails open in nudge mode","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","repo":"nobase","mode":"nudge"}
+{"name":"no remote and no local main still honors a spec in the working tree","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","repo":"nobase","setup":["untracked services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce"}
+{"name":"no remote: a local baseBranch develop is the comparison base","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","repo":"noorigin","setup":["localbranch develop"],"mode":"enforce","config":".baseBranch = \"develop\""}
+{"name":"no remote: a spec committed ahead of local develop allows the edit","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","repo":"noorigin","setup":["localbranch develop","commit services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce","config":".baseBranch = \"develop\""}
+{"name":"no remote and no local develop fails open","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","repo":"noorigin","mode":"enforce","config":".baseBranch = \"develop\""}
+{"name":"the remote ref wins over a local branch of the same name","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","setup":["commit services/core/src/orders/Create.usecase.int.spec.ts","localbranchhead develop","basebranch develop"],"mode":"enforce","config":".baseBranch = \"develop\""}
+{"name":"a local branch is not used when the remote ref exists and no spec is ahead of it","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","setup":["localbranchhead develop","basebranch develop"],"mode":"enforce","config":".baseBranch = \"develop\""}
+{"name":"a minimal PATH finds jq and git through the fallback directory (enforce)","expect":"blocked","file":"services/core/src/orders/Create.usecase.ts","env":"minpath","mode":"enforce"}
+{"name":"a minimal PATH finds jq and git through the fallback directory (nudge)","expect":"nudged","file":"services/core/src/orders/Create.usecase.ts","env":"minpath","mode":"nudge"}
+{"name":"a minimal PATH with a spec touched stays silent","expect":"silent","file":"services/core/src/orders/Create.usecase.ts","env":"minpath","setup":["untracked services/core/src/orders/Create.usecase.int.spec.ts"],"mode":"enforce"}

@@ -43,7 +43,7 @@ Find, and note the evidence for each:
 
 ## 2. Ask only what you could not determine
 
-At most five questions, each with your best guess as the default: which areas are costly to get wrong (money, auth, data migrations, production admin commands, personal data), because they become the escalation list; protected branches and base branch if unclear; RED and GREEN as separate commits (default yes); hook mode, `nudge` (default) or `enforce`; and the source roots if the layout is ambiguous.
+At most five questions, each with your best guess as the default: which areas are costly to get wrong (irreversible effects: what a mistake costs in this product's domain, auth, data migrations, production admin commands, personal data), because they become the escalation list; protected branches and base branch if unclear; RED and GREEN as separate commits (default yes); hook mode, `nudge` (default) or `enforce`; and the source roots if the layout is ambiguous.
 
 ## 3. Plan, then wait
 

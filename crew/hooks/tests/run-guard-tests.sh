@@ -6,9 +6,11 @@
 # Optional per-case project config, written to <repo>/.claude/crew.json for that case only:
 #   config     text written verbatim as the config file (may be malformed on purpose)
 #   env        nojq | nogit: PATH lacks the tool and CREW_FALLBACK_PATH is empty; minpath: PATH holds only core
-#              tools and jq and git are reachable only through CREW_FALLBACK_PATH
+#              tools and jq and git are reachable only through CREW_FALLBACK_PATH; jqfail: PATH holds core
+#              tools and a jq stub that exits 3
 #   maxms      fail when the hook takes longer than this many milliseconds
 #   noprojdir  true: CLAUDE_PROJECT_DIR is left unset (the hook must find the config from cwd)
+#   stderr     list of strings that must all appear (case-insensitive) in the hook's stderr
 # CLAUDE_PROJECT_DIR points at the case's repo directory unless noprojdir is set.
 set -euo pipefail
 
@@ -32,12 +34,14 @@ git -C "$TMP/feature" checkout -q -b feature/x
 git -C "$TMP/feature" branch --unset-upstream 2>/dev/null || true
 git clone -q -b stable "$TMP/remote.git" "$TMP/stable" 2>/dev/null
 mkdir -p "$TMP/none"
-mkdir -p "$TMP/core" "$TMP/corejq" "$TMP/fake"
+mkdir -p "$TMP/core" "$TMP/corejq" "$TMP/fake" "$TMP/jqfail"
 for t in cat grep egrep tr sed head tail mkdir cksum cut wc dirname basename find rm env sort uniq id; do
   p="$(command -v "$t" || true)"
-  if [[ -n "$p" ]]; then ln -sf "$p" "$TMP/core/$t"; ln -sf "$p" "$TMP/corejq/$t"; fi
+  if [[ -n "$p" ]]; then ln -sf "$p" "$TMP/core/$t"; ln -sf "$p" "$TMP/corejq/$t"; ln -sf "$p" "$TMP/jqfail/$t"; fi
 done
 ln -sf "$(command -v jq)" "$TMP/corejq/jq"
+printf '#!/bin/sh\nexit 3\n' >"$TMP/jqfail/jq"
+chmod +x "$TMP/jqfail/jq"
 ln -sf "$(command -v jq)" "$TMP/fake/jq"
 ln -sf "$(command -v git)" "$TMP/fake/git"
 BASH_BIN="$(command -v bash)"
@@ -47,7 +51,7 @@ now_ms() { perl -MTime::HiRes=time -e 'print int(time*1000)'; }
 
 fail=0
 total=0
-if ! jq -r --arg d "$TMP" '[.expect, (.repo // "none"), (.env // "-"), ((.noprojdir // false) | tostring), (has("config") | tostring), ((.maxms // 0) | tostring),
+if ! jq -r --arg d "$TMP" '[.expect, (.repo // "none"), (.env // "-"), ((.noprojdir // false) | tostring), (has("config") | tostring), ((.maxms // 0) | tostring), ((.stderr // []) | join("\u001e")),
   ({tool_input: {command: .cmd}, cwd: ($d + "/" + (.repo // "none"))} | tojson), (.cmd | tojson), (if has("config") then (.config | tojson) else "" end)] | join("\u001f")' "$CASES" >"$TMP/cases.records"; then
   echo "FAIL cannot parse cases file $CASES (malformed line?)" >&2
   exit 1
@@ -55,7 +59,7 @@ fi
 expected_cases=$(grep -c . "$CASES")
 # One jq pass reads every case: a record per line, fields joined by the unit separator. The hook
 # input and the command travel as compact JSON (single line, control characters escaped).
-while IFS="$SEP" read -r expect repo envname noproj has_config maxms input cmd_json config_json; do
+while IFS="$SEP" read -r expect repo envname noproj has_config maxms stderr_has input cmd_json config_json; do
   total=$((total + 1))
   mkdir -p "$TMP/$repo/.claude"
   rm -f "$TMP/$repo/.claude/crew.json"
@@ -66,12 +70,13 @@ while IFS="$SEP" read -r expect repo envname noproj has_config maxms input cmd_j
   case "$envname" in
     nojq) hook_path="$TMP/core"; env_args+=(CREW_FALLBACK_PATH="") ;;
     nogit) hook_path="$TMP/corejq"; env_args+=(CREW_FALLBACK_PATH="") ;;
+    jqfail) hook_path="$TMP/jqfail"; env_args+=(CREW_FALLBACK_PATH="") ;;
     minpath) hook_path="$TMP/core"; env_args+=(CREW_FALLBACK_PATH="$TMP/fake") ;;
   esac
   t0=0
   [[ "$maxms" -eq 0 ]] || t0="$(now_ms)"
   set +e
-  out="$(printf '%s' "$input" | env -u CLAUDE_PROJECT_DIR -u CREW_FALLBACK_PATH ${env_args[@]+"${env_args[@]}"} PATH="$hook_path" "$BASH_BIN" "$HOOK" 2>/dev/null)"
+  out="$(printf '%s' "$input" | env -u CLAUDE_PROJECT_DIR -u CREW_FALLBACK_PATH ${env_args[@]+"${env_args[@]}"} PATH="$hook_path" "$BASH_BIN" "$HOOK" 2>"$TMP/hook.stderr")"
   rc=$?
   set -e
   if [[ "$maxms" -gt 0 ]]; then
@@ -93,6 +98,16 @@ while IFS="$SEP" read -r expect repo envname noproj has_config maxms input cmd_j
     fail=$((fail + 1))
     cmd="$(printf '%s' "$cmd_json" | jq -r '.')"
     echo "FAIL expected=$expect got=$got repo=$repo: $cmd"
+  elif [[ -n "$stderr_has" ]]; then
+    IFS=$'\x1e' read -r -a wanted <<<"$stderr_has"
+    for w in "${wanted[@]}"; do
+      if ! grep -qiF -- "$w" "$TMP/hook.stderr"; then
+        fail=$((fail + 1))
+        cmd="$(printf '%s' "$cmd_json" | jq -r '.')"
+        echo "FAIL stderr lacks '$w' (got: $(head -c 120 "$TMP/hook.stderr" | tr '\n' ' ')): $cmd"
+        break
+      fi
+    done
   fi
 done <"$TMP/cases.records"
 

@@ -19,7 +19,7 @@ Rules for the whole run:
 - You do not write tests, skeletons or implementation yourself. When an agent's output is wrong, send it back with what is wrong.
 - Call crew agents without a `model`: each carries its own. One exception: an agent that failed twice on the same task is re-run once with `model` one tier up (sonnet to opus, opus to fable), never a third time at the same tier.
 - When you start a flow on your own (failing test first, delegating, escalating), say so in one line with the reason.
-- Stop and ask whenever the escalation list applies: architecture choices, new dependencies, pattern deviations, money, auth, migrations on existing data, production commands.
+- Stop and ask whenever the escalation list applies: architecture choices, new dependencies, pattern deviations, irreversible effects (moving value, sending, deleting, publishing), auth, migrations on existing data, production commands.
 - Never commit or push to a protected branch. If you are on one, create a branch with plain `git checkout -b <branch>` first. Commit messages follow the project convention, with no co-author trailers unless the project asks.
 
 ## 1. Spec

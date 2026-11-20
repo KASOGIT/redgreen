@@ -13,7 +13,7 @@ Symptom: $ARGUMENTS
 1. **Understand.** Restate the symptom as literals: input, expected result, actual result. Ask when the expected result is not clear.
 2. **Search.** Run `crew:debugger-analyst` with the symptom, the failing command and the logs location. It returns the root cause with evidence, a minimal reproduction, a proposed fix and its risk. Open the evidence yourself before believing it.
 3. **Diagnose further if needed.** When the cause is not proven, add diagnostics (temporary logging or a probe test), run it, and remove it afterwards.
-4. **Escalation check.** If the fix touches money movement, a ledger, auth, a migration on existing data or a production admin command (or anything the project `CLAUDE.md` lists), stop here. Report the root cause, the proposed fix and the risk, and ask before acting.
+4. **Escalation check.** If the fix touches an irreversible effect (moving value, sending, deleting, publishing), auth, a migration on existing data or a production admin command (or anything the project `CLAUDE.md` lists), stop here. Report the root cause, the proposed fix and the risk, and ask before acting.
 5. **Reproduce.** Run `crew:test-engineer` to write a test that reproduces the bug, red for the right reason, before any fix.
 6. **Fix.** Run `crew:implementer` for the minimal fix. Never change the test's expected value to fit the code.
 7. **Verify.** Run `crew:test-runner` for the test, the surrounding suite, type-check and lint.
