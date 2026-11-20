@@ -9,9 +9,20 @@
 # A skill's frontmatter "model:" line is never copied as it is: the copy gets "model: <managerModel>" in
 # its place when <repo>/.claude/crew.json sets managerModel (sonnet, opus, haiku or fable), and no model
 # line otherwise. A bad managerModel or an unreadable crew.json exits 2 and writes nothing.
+# The plugin's vendor/ folder holds what an adopted repo needs to update itself and is not loaded as plugin
+# content: crew-update.sh and the crew-update skill are always copied, the crew-update GitHub workflow only
+# when <repo>/.claude/crew.json sets "updateWorkflow": true (a workflow crew-vendor wrote is deleted when it is not).
+# A non-boolean updateWorkflow exits 1 and writes nothing. This script is itself copied to
+# .claude/hooks/crew/crew-vendor so a repo updates with its own copy; CREW_PLUGIN_DIR names the plugin folder
+# to read from (default: this script's own plugin root).
 set -u
 
-PLUGIN="$(cd "$(dirname "$0")/.." && pwd)"
+if [ -n "${CREW_PLUGIN_DIR:-}" ]; then
+  [ -d "$CREW_PLUGIN_DIR" ] || { echo "crew-vendor: CREW_PLUGIN_DIR is not a directory: $CREW_PLUGIN_DIR" >&2; exit 2; }
+  PLUGIN="$(cd "$CREW_PLUGIN_DIR" && pwd)"
+else
+  PLUGIN="$(cd "$(dirname "$0")/.." && pwd)"
+fi
 SKILLS_NOT_COPIED="adopt"
 HOOKS_SUBDIR=".claude/hooks/crew"
 LOCK_REL=".claude/crew.lock.json"
@@ -49,6 +60,17 @@ read_manager_model() {
     Ssonnet | Sopus | Shaiku | Sfable) MANAGER_MODEL="${mm#S}" ;;
     *) die "managerModel in $cfg must be one of sonnet, opus, haiku, fable (nothing was changed)" ;;
   esac
+}
+
+# Sets UPDATE_WORKFLOW to 1 when <repo>/.claude/crew.json has "updateWorkflow": true (read_manager_model validated the file).
+read_update_workflow() {
+  local cfg="$TARGET/.claude/crew.json"
+  UPDATE_WORKFLOW=0
+  [ -f "$cfg" ] || return 0
+  jq -e 'type != "object" or (has("updateWorkflow") | not) or (.updateWorkflow | type == "boolean")' "$cfg" >/dev/null 2>&1 ||
+    { echo "crew-vendor: updateWorkflow must be true or false (nothing was changed)" >&2; exit 1; }
+  jq -e 'type == "object" and .updateWorkflow == true' "$cfg" >/dev/null 2>&1 && UPDATE_WORKFLOW=1
+  return 0
 }
 
 # Replace the frontmatter model line of a copied skill by the repo's managerModel, or drop it.
@@ -92,12 +114,31 @@ build_stage() {
       command cp -p "$PLUGIN/hooks/$rel" "$dest"
     done
   fi
+  if [ -f "$PLUGIN/bin/crew-vendor" ]; then
+    mkdir -p "$STAGE/$HOOKS_SUBDIR"
+    command cp -p "$PLUGIN/bin/crew-vendor" "$STAGE/$HOOKS_SUBDIR/crew-vendor"
+    chmod +x "$STAGE/$HOOKS_SUBDIR/crew-vendor"
+  fi
+  if [ -f "$PLUGIN/vendor/crew-update.sh" ]; then
+    mkdir -p "$STAGE/$HOOKS_SUBDIR"
+    command cp -p "$PLUGIN/vendor/crew-update.sh" "$STAGE/$HOOKS_SUBDIR/crew-update.sh"
+  fi
+  if [ -f "$PLUGIN/vendor/skills/crew-update/SKILL.md" ]; then
+    mkdir -p "$STAGE/.claude/skills/crew-update"
+    command cp -p "$PLUGIN/vendor/skills/crew-update/SKILL.md" "$STAGE/.claude/skills/crew-update/SKILL.md"
+  fi
+  if [ "$UPDATE_WORKFLOW" = 1 ] && [ -f "$PLUGIN/vendor/workflows/crew-update.yml" ]; then
+    mkdir -p "$STAGE/.github/workflows"
+    command cp -p "$PLUGIN/vendor/workflows/crew-update.yml" "$STAGE/.github/workflows/crew-update.yml"
+  fi
 }
 
 # new hooks, rewritten to point at the repo copy
 new_hooks_json() {
   if [ -f "$PLUGIN/hooks/hooks.json" ]; then
-    jq -c '.hooks // {}' "$PLUGIN/hooks/hooks.json" | sed -e "s#\\\${CLAUDE_PLUGIN_ROOT}/hooks/#\${CLAUDE_PROJECT_DIR}/$HOOKS_SUBDIR/#g"
+    # the variable name is split so the vendored copy of this script carries no such reference
+    local root_var="CLAUDE_PLUGIN"_ROOT
+    jq -c '.hooks // {}' "$PLUGIN/hooks/hooks.json" | sed -e "s#\\\${$root_var}/hooks/#\${CLAUDE_PROJECT_DIR}/$HOOKS_SUBDIR/#g"
   else
     echo '{}'
   fi
@@ -252,6 +293,7 @@ write_lock() {
 }
 
 read_manager_model
+read_update_workflow
 build_stage
 NEWHOOKS="$(new_hooks_json)"
 OLDCMDS="$(lock_hook_cmds)"
@@ -316,7 +358,8 @@ case "$CMD" in
         NEW | UPDATE)
           atomic_put "$STAGE/$p" "$TARGET/$p"; changed=1; echo "  wrote $p" ;;
         DELETE)
-          command rm -f "$TARGET/$p"; rmdir "$(dirname "$TARGET/$p")" 2>/dev/null; changed=1; echo "  removed $p" ;;
+          command rm -f "$TARGET/$p"; rmdir "$(dirname "$TARGET/$p")" 2>/dev/null; changed=1; echo "  removed $p"
+          [ "$p" = ".github/workflows/crew-update.yml" ] && rmdir "$TARGET/.github" 2>/dev/null ;;
         GONE) changed=1 ;;
       esac
     done <"$WORK/status"

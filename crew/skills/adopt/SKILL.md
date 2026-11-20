@@ -57,7 +57,7 @@ Run `crew-vendor plan .` (nothing is written). Show its output and, next to it, 
 
 ## 5. Copy the plugin in
 
-After the OK, and only when the plan had no clash or local edit: run `crew-vendor apply .`. It writes the agents, the three skills and the hook scripts under `.claude/`, merges the hook entries into `.claude/settings.json` without touching other keys or hooks, and writes `.claude/crew.lock.json`. Then run `crew-vendor check .` and show the result. Verify the commands you wrote into `CLAUDE.md` exist in the repo's scripts.
+After the OK, and only when the plan had no clash or local edit: run `crew-vendor apply .`. It writes the agents, the three skills and the hook scripts under `.claude/`, merges the hook entries into `.claude/settings.json` without touching other keys or hooks, and writes `.claude/crew.lock.json`. It also copies the `/crew-update` skill and `.claude/hooks/crew/crew-update.sh`, so the repo can update itself; mention it. A repo that wants a weekly pull request sets `"updateWorkflow": true` in `.claude/crew.json`, and the next apply adds `.github/workflows/crew-update.yml`. Then run `crew-vendor check .` and show the result. Verify the commands you wrote into `CLAUDE.md` exist in the repo's scripts.
 
 ## 6. Turn the plugin off for the person running this
 

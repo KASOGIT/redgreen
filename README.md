@@ -25,6 +25,8 @@ Load the plugin, either by installing it as above or, from a local checkout of t
 
 The copy never carries a skill's `model:` line: each contributor keeps their own session model. A repo that wants the `feature` workflow to start on a given model sets `"managerModel"` (`sonnet`, `opus`, `haiku` or `fable`) in its `.claude/crew.json`, and the next `crew-vendor apply` writes it into the copied skill.
 
+An adopted repo also gets the `/crew-update` skill and `.claude/hooks/crew/crew-update.sh`, which pull the latest crew from the public redgreen marketplace and open a pull request. A repo that wants this weekly and automatic sets `"updateWorkflow": true` in its `.claude/crew.json`: `crew-vendor` then also copies `.github/workflows/crew-update.yml`.
+
 To update a repo later: `crew-vendor plan <repo>`, then `crew-vendor apply <repo>`. `crew-vendor check <repo>` exits non-zero when the copy is behind the plugin or was edited.
 
 ## Hook configuration
