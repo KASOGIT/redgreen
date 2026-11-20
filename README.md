@@ -39,3 +39,5 @@ The tests live in the source repository this marketplace is published from, not 
 - `bash tests/vendor/run.sh`: `crew-vendor` on fixtures and on the real plugin.
 - `crew/hooks/tests/run-all.sh`: the hooks.
 - Evals (cost real money, they need the fixture repos the cases build with `--scaffold`): `claude plugin eval ./crew --model sonnet --runs 2 --max-cost-usd 4 --trust-plugin --scaffold --allow-tools Bash`. Results land in `crew/evals/results/`, which is git-ignored.
+
+MIT licensed, see LICENSE.

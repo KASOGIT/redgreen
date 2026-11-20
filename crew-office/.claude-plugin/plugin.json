@@ -1,6 +1,7 @@
 {
   "name": "crew-office",
   "description": "A pane that shows which crew desk is working, idle, done or failed.",
+  "license": "MIT",
   "keywords": [
     "subagents",
     "pane",
