@@ -17,13 +17,13 @@ To see the plugin in use within a full setup (personal rules, models, the weekly
 ## What it contains
 
 - Seven agents: `test-engineer`, `implementer`, `code-reviewer`, `test-runner`, `domain-researcher`, `architecture-planner`, `debugger-analyst`. Each sets its own `model` and `effort` in its frontmatter and ends with a size-capped hand-back, so the main session only keeps summaries.
-- Skills: `feature` (spec, plan, RED, GREEN, critique, feedback, report), `debug`, `review`, and `adopt`.
+- Skills: `feature` (spec, plan, RED, GREEN, critique, feedback, report), `debug`, `review`, `research` (subject to plan file, with web search), `audit` (perf, bugs, debt or security findings, ranked), and `adopt`. `research` and `audit` run by hand only.
 - Hooks (`crew/hooks/`): a guard against hard-to-undo commands and a spec-first nudge.
 - `crew/bin/crew-vendor`: copies the plugin into a repo.
 
 ## How a repo gets it
 
-Load the plugin, either by installing it as above or, from a local checkout of this folder, with `claude --plugin-dir <path to this folder>/crew`. Then run `/crew:adopt` in the repo you want to set up. It inspects the repo, writes `CLAUDE.md`, `.claude/rules/tdd.md` and `.claude/crew.json`, shows `crew-vendor plan`, and after your OK copies the agents, the `feature`, `debug` and `review` skills and the hook scripts into `.claude/`. Commit the result: teammates, cloud sessions and CI then need no plugin. `crew-vendor` never overwrites a file it did not write and never clobbers a local edit; it lists the problem and stops.
+Load the plugin, either by installing it as above or, from a local checkout of this folder, with `claude --plugin-dir <path to this folder>/crew`. Then run `/crew:adopt` in the repo you want to set up. It inspects the repo, writes `CLAUDE.md`, `.claude/rules/tdd.md` and `.claude/crew.json`, shows `crew-vendor plan`, and after your OK copies the agents, the `feature`, `debug`, `review`, `research` and `audit` skills and the hook scripts into `.claude/`. Commit the result: teammates, cloud sessions and CI then need no plugin. `crew-vendor` never overwrites a file it did not write and never clobbers a local edit; it lists the problem and stops.
 
 The copy never carries a skill's `model:` line: each contributor keeps their own session model. A repo that wants the `feature` workflow to start on a given model sets `"managerModel"` (`sonnet`, `opus`, `haiku` or `fable`) in its `.claude/crew.json`, and the next `crew-vendor apply` writes it into the copied skill.
 

@@ -9,6 +9,8 @@ effort: high
 
 You review the diff against the base branch and may read related files for context. You change nothing.
 
+When the caller names paths and a lens instead of a diff, review those files for that lens: the caller's lens checklist replaces "Look for", and findings use the same hand-back (for perf or debt, the failure scenario is the measurable cost).
+
 Never check out another branch in the working directory. Use `git diff base...branch`, `git show branch:path` or a temporary worktree. Take the base branch and the invariants from the project `CLAUDE.md`, or from the caller.
 
 ## Look for

@@ -1,0 +1,24 @@
+---
+name: research
+description: Researches a subject with the crew and iterates with you on a plan file, then hands it to the feature workflow, so run it by hand before building something unclear.
+argument-hint: <subject or plan path>
+disable-model-invocation: true
+---
+
+# Research workflow
+
+You are the manager: delegate the reading to the crew, keep summaries in this session, and write the plan file yourself (the agents are read-only).
+
+Subject: $ARGUMENTS
+
+1. **Subject.** If it is a path to an existing plan file, resume it: read it and continue from its open questions.
+2. **Frame.** Restate the question as literals: inputs, expected outcome, constraints. Ask about whatever is ambiguous.
+3. **Research.** Run `crew:domain-researcher` for the constraints (repo docs, decision records, code; the web when the subject needs outside facts), then `crew:architecture-planner` for options with a recommendation. Launch independent agents in parallel, in one message. Spot-check the key evidence yourself.
+4. **Write the plan file.** Folder from the project `CLAUDE.md`, default `docs/plans/<slug>.md`. Sections: Question, Constraints, Options, Recommendation, Decision, Spec (literals), Test plan, Open questions.
+5. **Iterate.** Each round ends with the plan path, a short summary and the open questions, then wait for the user. On feedback, revise the same file. Delegate new reading again rather than reading many files yourself.
+6. **Hand off.** When the Decision is filled, offer `/crew:feature <plan path>`.
+
+Rules:
+- Edit no code, only the plan file.
+- Never commit on a protected branch: create a branch with `git checkout -b <branch>` before committing the plan file.
+- The escalation list in the project `CLAUDE.md` applies: stop and ask before anything on it.

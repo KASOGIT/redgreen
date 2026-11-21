@@ -38,5 +38,5 @@ Stop with root cause, options and a recommendation, and wait, for: <ESCALATION_L
 ## Rules and agents
 
 - Spec-first protocol and this repo's test commands: `.claude/rules/tdd.md`.
-- Workflow: `/feature`, `/debug`, `/review`.
+- Workflow: `/feature`, `/debug`, `/review`, `/research`, `/audit`.
 - Keep the main conversation small: hand work whose output you only need summarized to the agents in `.claude/agents/`. Test, type-check and lint runs go to `test-runner`, reading an unfamiliar area to `domain-researcher`, long logs and traces to `debugger-analyst`, a diff to `code-reviewer`. Decisions and anything about the user's intent stay in the main conversation.

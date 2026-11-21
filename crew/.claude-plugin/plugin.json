@@ -1,6 +1,6 @@
 {
   "name": "crew",
-  "description": "Spec-first, test-first workflow: seven subagents and the feature, debug, review and adopt skills.",
+  "description": "Spec-first, test-first workflow: seven subagents and six workflow skills: feature, debug, review, research, audit and adopt.",
   "license": "MIT",
   "keywords": [
     "tdd",

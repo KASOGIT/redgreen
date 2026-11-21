@@ -26,9 +26,11 @@ Rules for the whole run:
 
 Restate the requirement as literals: inputs, outputs, every error exit, persisted state, side effects. Ask now about anything ambiguous. Never infer expectations from existing code. If the area is unfamiliar, run `crew:domain-researcher` first with the question to answer.
 
+When the requirement is a plan file (from `/crew:research`), read its Decision, Spec and Test plan. If the Decision is empty or open questions remain, stop and send the user back to `/crew:research <path>`. Otherwise its Spec is the spec, its Test plan feeds the RED brief, and step 2 is skipped.
+
 ## 2. Plan
 
-Large or unfamiliar change: run `crew:architecture-planner`, show the options and its recommendation, wait for the choice. Small change: three lines in chat. Before committing to a large plan, consult the advisor if the session has one.
+Large or unfamiliar change: run `crew:architecture-planner`, show the options and its recommendation, wait for the choice. Small change: three lines in chat. Before committing to a large plan, consult the advisor if the session has one. A plan file from `/crew:research` replaces this step (see step 1).
 
 ## 3. RED
 
