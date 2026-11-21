@@ -71,6 +71,9 @@ trap 'exit 0' ERR
 FALLBACK_PATH="${CREW_FALLBACK_PATH-/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin}"
 [[ -z "$FALLBACK_PATH" ]] || PATH="${PATH:+$PATH:}$FALLBACK_PATH"
 
+# No config in a known project dir: stop before forking cat and jq.
+if [[ -n "${CLAUDE_PROJECT_DIR:-}" && -d "$CLAUDE_PROJECT_DIR" && ! -f "$CLAUDE_PROJECT_DIR/.claude/crew.json" ]]; then exit 0; fi
+
 command -v jq >/dev/null 2>&1 || exit 0
 command -v git >/dev/null 2>&1 || exit 0
 
@@ -96,7 +99,6 @@ CFG_FILTER='
 BASE_BRANCH=main
 CFG_MODE=""
 RULE=""
-HAVE_CFG=false
 ROOTS_PATH=()
 ROOTS_DEPTH=()
 ROOTS_SHARED=()
@@ -106,7 +108,7 @@ TESTS=()
 IGNORES=()
 while IFS=$'\x1f' read -r KIND A B C D; do
   case "$KIND" in
-    S) HAVE_CFG=true; BASE_BRANCH="$A"; CFG_MODE="$B"; RULE="$C" ;;
+    S) BASE_BRANCH="$A"; CFG_MODE="$B"; RULE="$C" ;;
     R)
       RP="$A"
       while [[ "$RP" == ./* ]]; do RP="${RP#./}"; done
@@ -130,7 +132,8 @@ while IFS=$'\x1f' read -r KIND A B C D; do
     I) IGNORES+=("$A") ;;
   esac
 done < <(jq -r "$CFG_FILTER" "$CONF" 2>/dev/null || true)
-[[ "$HAVE_CFG" == true && ${#ROOTS_PATH[@]} -gt 0 && ${#EXTS[@]} -gt 0 ]] || exit 0
+[[ ${#ROOTS_PATH[@]} -gt 0 && ${#EXTS[@]} -gt 0 ]] || exit 0
+[[ ${#TESTS[@]} -gt 0 ]] || TESTS=("*.spec.*" "*.test.*" "*_test.*" "test_*.*")
 [[ "$BASE_BRANCH" =~ ^[A-Za-z0-9._/-]+$ ]] || exit 0
 
 RAW_MODE="${CREW_POLICY_MODE:-}"

@@ -18,6 +18,76 @@ else
   fail=$((fail + 1))
 fi
 
+echo "== schema hygiene"
+SCHEMA="$HERE/../crew.schema.json"
+TEMPLATE="$HERE/../../skills/adopt/templates/crew.json"
+check() { # check <label> <ok: 0 passes>
+  if [[ "$2" -eq 0 ]]; then pass=$((pass + 1)); else echo "FAIL $1"; fail=$((fail + 1)); fi
+}
+# Keys of a config that its schema does not describe, recursively through object properties and array items.
+UNKNOWN_KEYS='def unk($s): if type == "object" and ($s | has("properties")) then to_entries[] | .key as $k | if ($s.properties | has($k)) then (.value | unk($s.properties[$k]) | "\($k)." + .) else $k end elif type == "array" and ($s | has("items")) then .[] | unk($s.items) else empty end;
+  $schema[0] as $root | unk($root)'
+for f in "$EX" "$TEMPLATE" "$HERE"/fixtures/*.json; do
+  bad="$(jq -r --slurpfile schema "$SCHEMA" "$UNKNOWN_KEYS" "$f" 2>&1)"
+  check "$(basename "$f") uses keys the schema does not define: $bad" "$([[ -z "$bad" ]] && echo 0 || echo 1)"
+done
+# Values of a config against the schema keywords it actually uses: type, enum, pattern, minLength, minimum, maximum,
+# minItems, items and required, recursively through properties and items. strict=false skips pattern and minLength
+# (the adopt template holds <PLACEHOLDER> strings that are filled in at adoption).
+BAD_VALUES='def istype($t): if $t == "integer" then (type == "number" and . == floor) else type == $t end;
+  def viol($s; $p):
+    . as $v
+    | (if ($s | has("type")) and ($v | istype($s.type) | not) then "\($p) is not \($s.type)" else empty end),
+      (if ($s | has("enum")) and (any($s.enum[]; . == $v) | not) then "\($p) is not one of \($s.enum | tojson)" else empty end),
+      (if ($v | type) == "string" and $strict and ($s | has("pattern")) and ($v | test($s.pattern) | not) then "\($p) \($v | tojson) does not match \($s.pattern)" else empty end),
+      (if ($v | type) == "string" and $strict and ($s | has("minLength")) and ($v | length) < $s.minLength then "\($p) \($v | tojson) is shorter than \($s.minLength)" else empty end),
+      (if ($v | type) == "number" and ($s | has("minimum")) and $v < $s.minimum then "\($p) \($v) is below \($s.minimum)" else empty end),
+      (if ($v | type) == "number" and ($s | has("maximum")) and $v > $s.maximum then "\($p) \($v) is above \($s.maximum)" else empty end),
+      (if ($v | type) == "array" and ($s | has("minItems")) and ($v | length) < $s.minItems then "\($p) has fewer than \($s.minItems) items" else empty end),
+      (if ($v | type) == "array" and ($s | has("items")) then range($v | length) as $i | $v[$i] | viol($s.items; "\($p)[\($i)]") else empty end),
+      (if ($v | type) == "object" and ($s | has("required")) then $s.required[] | select(. as $k | $v | has($k) | not) | "\($p) lacks required \(.)" else empty end),
+      (if ($v | type) == "object" and ($s | has("properties")) then $v | keys[] as $k | select($s.properties | has($k)) | $v[$k] | viol($s.properties[$k]; "\($p).\($k)") else empty end);
+  $schema[0] as $root | viol($root; "$")'
+for f in "$EX" "$TEMPLATE" "$HERE"/fixtures/*.json; do
+  strict=true
+  [[ "$f" != "$TEMPLATE" ]] || strict=false
+  bad="$(jq -r --argjson strict "$strict" --slurpfile schema "$SCHEMA" "$BAD_VALUES" "$f" 2>&1)"
+  check "$(basename "$f") holds values the schema rejects: $bad" "$([[ -z "$bad" ]] && echo 0 || echo 1)"
+done
+# The value check must itself catch each kind of violation, or it would pass vacuously.
+for probe in '{"specFirst":{"roots":[{"path":"src"}],"sourceExtensions":[".ts"],"testPatterns":["tests/*.py",""]}}' \
+  '{"baseBranch":7}' '{"managerModel":"gpt"}' '{"protectedBranches":[]}' '{"protectedBranches":["a b"]}' \
+  '{"specFirst":{"roots":[{"path":"src","moduleDepth":10}],"sourceExtensions":[".ts"]}}' \
+  '{"specFirst":{"roots":[{"path":"src","moduleDepth":"1"}],"sourceExtensions":[".ts"]}}' \
+  '{"specFirst":{"roots":[{"moduleDepth":1}],"sourceExtensions":[".ts"]}}' '{"updateWorkflow":"no"}'; do
+  caught="$(printf '%s' "$probe" | jq -r --argjson strict true --slurpfile schema "$SCHEMA" "$BAD_VALUES" 2>&1)"
+  check "the schema value check does not flag $probe" "$([[ -n "$caught" ]] && echo 0 || echo 1)"
+done
+# A relative $schema must resolve from the file's own folder (the template names its vendored location, so it is skipped).
+for f in "$EX" "$HERE"/fixtures/*.json; do
+  ref="$(jq -r '."$schema" // empty' "$f")"
+  check "$(basename "$f") \$schema '$ref' does not point at crew.schema.json" "$([[ -z "$ref" || "$(cd "$(dirname "$f")" && cd "$(dirname "$ref")" && pwd)/$(basename "$ref")" == "$(cd "$(dirname "$SCHEMA")" && pwd)/crew.schema.json" ]] && echo 0 || echo 1)"
+done
+# Defaults restated in the hooks must equal the schema's "default" values. Each hook line is read by pattern:
+# if a hook is reworded the extraction comes up empty and the check fails, so edit both together.
+sdef() { jq -c "$1.default" "$SCHEMA"; }
+GUARD="$HERE/../guard-destructive.sh"
+SPEC="$HERE/../require-spec-first.sh"
+hook_branches="$(sed -n 's/^BRANCHES=(\(.*\))$/\1/p' "$GUARD" | head -n 1 | tr ' ' '\n' | jq -R . | jq -sc .)"
+check "guard BRANCHES default ($hook_branches) differs from schema protectedBranches default $(sdef .properties.protectedBranches)" "$([[ "$hook_branches" == "$(sdef .properties.protectedBranches)" ]] && echo 0 || echo 1)"
+hook_base="$(sed -n 's/.*(\.baseBranch \/\/ \("[^"]*"\)).*/\1/p' "$SPEC" | head -n 1)"
+check "spec-first baseBranch default ($hook_base) differs from the schema default $(sdef .properties.baseBranch)" "$([[ "$hook_base" == "$(sdef .properties.baseBranch)" ]] && echo 0 || echo 1)"
+hook_depth="$(sed -n 's/.*(\.moduleDepth \/\/ \([0-9]*\)).*/\1/p' "$SPEC" | head -n 1)"
+check "spec-first moduleDepth default ($hook_depth) differs from the schema default $(sdef .properties.specFirst.properties.roots.items.properties.moduleDepth)" "$([[ "$hook_depth" == "$(sdef .properties.specFirst.properties.roots.items.properties.moduleDepth)" ]] && echo 0 || echo 1)"
+hook_mode="$(sed -n 's/.*\${RAW_MODE:-\([a-z]*\)}.*/"\1"/p' "$SPEC" | head -n 1)"
+check "spec-first mode default ($hook_mode) differs from the schema default $(sdef .properties.specFirst.properties.mode)" "$([[ "$hook_mode" == "$(sdef .properties.specFirst.properties.mode)" ]] && echo 0 || echo 1)"
+tp_schema="$(sdef .properties.specFirst.properties.testPatterns)"
+tp_jq="$(sed -n '/specFirst\.testPatterns/s/.*else \(\[[^]]*\]\) end.*/\1/p' "$SPEC" | head -n 1 | jq -c . 2>/dev/null)"
+tp_bash="$(sed -n 's/^\[\[ \${#TESTS\[@\]} -gt 0 \]\] || TESTS=(\(.*\))$/\1/p' "$SPEC" | head -n 1 | tr -d '"' | tr ' ' '\n' | jq -R . | jq -sc .)"
+check "spec-first testPatterns default in the jq filter ($tp_jq) differs from the schema default $tp_schema" "$([[ "$tp_jq" == "$tp_schema" ]] && echo 0 || echo 1)"
+check "spec-first testPatterns default in bash ($tp_bash) differs from the schema default $tp_schema" "$([[ "$tp_bash" == "$tp_schema" ]] && echo 0 || echo 1)"
+check "spec-first ignoreRegex default is not []: schema says $(sdef .properties.specFirst.properties.ignoreRegex)" "$([[ "$(sdef .properties.specFirst.properties.ignoreRegex)" == "[]" ]] && grep -q 'specFirst.ignoreRegex | if type == "array" then . else \[\] end' "$SPEC" && echo 0 || echo 1)"
+
 OUT="$(mktemp -d)"
 trap 'rm -rf "$OUT"' EXIT
 SHARDS=4

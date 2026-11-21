@@ -18,7 +18,7 @@
 # "...", psql -c "..."). Then each ;, & or | separated segment is judged on its own.
 # A here-document body is dropped when it feeds something like cat or git commit -F -, and kept
 # when the command reading it is one of the same interpreters (psql <<'SQL', bash <<EOF, ssh host <<EOF).
-# Commands longer than 4096 characters are matched raw, without masking: the scanner is quadratic,
+# Commands longer than 4096 characters are matched raw, without masking: bash 3.2 is too slow on them,
 # and raw matching errs toward blocking (a long commit message that mentions a dangerous command is
 # a false positive there).
 # Known limits, all deliberate for a regex-level net:
@@ -76,7 +76,8 @@ if [[ "$PARSED" == *$'\n'* ]]; then CMD="${PARSED#*$'\n'}"; else CMD=""; fi
 # quoted heredoc line ending in a backslash must not swallow the next line); only a command too long
 # to be masked is joined here, so a split delete is seen.
 BSNL=$'\\\n'
-case "$((${#CMD} > 4096))$CMD" in
+MASK_MAX=4096
+case "$((${#CMD} > MASK_MAX))$CMD" in
   1*\\$'\n'*) CMD="$(printf '%s' "$CMD" | tr '\n' '\001' | sed "s/\\\\$(printf '\001')/ /g" | tr '\001' '\n')" ;;
 esac
 
@@ -116,11 +117,12 @@ ask() {
 }
 
 # --- mask: sets MASKED to CMD with argument text neutralized (see the header) ---
-RUN_RE=$'^[^\\\'"<#;&|\n]+'
+MASK_STOP=$'[\\\\\'"<#;&|\n]'
 DQ_RE='^"(([^"\\]|\\.)*)"'
 SQ_RE="^'([^']*)'"
 HD_RE='^<<-?[[:space:]]*["'"'"']?([A-Za-z0-9_]+)'
-EXEC_RE='[[:space:]](sh|bash|zsh|dash|ksh|eval|ssh|watch|python3?|node|perl|ruby|docker|kubectl|psql|pgcli|mysql|mariadb|sqlite3|sqlcmd)[[:space:]]'
+SQL_CLIENTS='psql|pgcli|mysql|mariadb|sqlite3|sqlcmd'
+EXEC_RE="[[:space:]](sh|bash|zsh|dash|ksh|eval|ssh|watch|python3?|node|perl|ruby|docker|kubectl|${SQL_CLIENTS})[[:space:]]"
 MASKED=""
 
 mask_quoted() {
@@ -139,39 +141,38 @@ mask_quoted() {
   seg+="$rep"
 }
 
+# One pass: rest holds the unread tail and shrinks as tokens are consumed, so no step re-slices the whole string.
 mask() {
-  local s="$1" n="${#1}" i=0 c rest run body line stripped hd="" hdkeep=false out="" seg=""
-  while ((i < n)); do
-    rest="${s:i}"
-    if [[ "$rest" =~ $RUN_RE ]]; then
-      run="${BASH_REMATCH[0]}"
+  local rest="$1" run body line stripped hd="" hdkeep=false out="" seg=""
+  while [[ -n "$rest" ]]; do
+    run="${rest%%$MASK_STOP*}"
+    if [[ -n "$run" ]]; then
       out+="$run"
       seg+="$run"
-      i=$((i + ${#run}))
+      rest="${rest:${#run}}"
       continue
     fi
-    c="${rest:0:1}"
-    case "$c" in
+    case "${rest:0:1}" in
       '\')
         if [[ "${rest:1:1}" == $'\n' ]]; then out+=" "; seg+=" "; else out+="${rest:0:2}"; seg+="${rest:0:2}"; fi
-        i=$((i + 2)) ;;
+        rest="${rest:2}" ;;
       "'")
         if [[ "$rest" =~ $SQ_RE ]]; then
           body="${BASH_REMATCH[1]}"
-          i=$((i + ${#BASH_REMATCH[0]}))
+          rest="${rest:${#BASH_REMATCH[0]}}"
           mask_quoted "$body" sq
         else
           mask_quoted "${rest:1}" sq
-          i=$n
+          rest=""
         fi ;;
       '"')
         if [[ "$rest" =~ $DQ_RE ]]; then
           body="${BASH_REMATCH[1]}"
-          i=$((i + ${#BASH_REMATCH[0]}))
+          rest="${rest:${#BASH_REMATCH[0]}}"
           mask_quoted "$body" dq
         else
           mask_quoted "${rest:1}" dq
-          i=$n
+          rest=""
         fi ;;
       '<')
         if [[ "${rest:0:2}" == "<<" && "${rest:2:1}" != "<" ]]; then
@@ -182,50 +183,47 @@ mask() {
           fi
           out+="<<"
           seg+="<<"
-          i=$((i + 2))
+          rest="${rest:2}"
         else
           out+="<"
           seg+="<"
-          i=$((i + 1))
+          rest="${rest:1}"
         fi ;;
       '#')
         case "${out: -1}" in
           "" | " " | $'\t' | $'\n' | ";" | "&" | "|" | "(")
             line="${rest%%$'\n'*}"
-            i=$((i + ${#line})) ;;
+            rest="${rest:${#line}}" ;;
           *)
             out+="#"
             seg+="#"
-            i=$((i + 1)) ;;
+            rest="${rest:1}" ;;
         esac ;;
       $'\n')
         out+=$'\n'
         seg=""
-        i=$((i + 1))
+        rest="${rest:1}"
         if [[ -n "$hd" && "$hdkeep" == true ]]; then
           hd=""
         elif [[ -n "$hd" ]]; then
-          rest="${s:i}"
           while [[ -n "$rest" ]]; do
             line="${rest%%$'\n'*}"
             if [[ "$rest" == *$'\n'* ]]; then rest="${rest#*$'\n'}"; else rest=""; fi
             stripped="${line#"${line%%[![:space:]]*}"}"
             if [[ "$stripped" == "$hd" ]]; then break; fi
           done
-          i=$((n - ${#rest}))
           hd=""
         fi ;;
       *)
-        out+="$c"
+        out+="${rest:0:1}"
         seg=""
-        i=$((i + 1)) ;;
+        rest="${rest:1}" ;;
     esac
   done
   MASKED="$out"
 }
 
 # On macOS bash 3.2, [[ =~ ]] and ${var//pat/rep} hang on strings of several KB, so commands over MASK_MAX characters use grep and tr.
-MASK_MAX=4096
 case "$CMD" in
   *\\* | *\'* | *\"* | *\<* | *\#*)
     if ((${#CMD} > MASK_MAX)); then MASKED="$CMD"; else mask "$CMD"; fi ;;
@@ -289,8 +287,8 @@ env_value() {
     if [[ "${w%%=*}" == "$2" ]]; then EV="${w#*=}"; fi
   done
 }
-# ${//} is quadratic in bash 3.2, so a long string is split by tr.
-if ((${#MASKED} > MASK_MAX)); then
+# ${//} is quadratic in bash 3.2 (about 0.3 s at 1.7 KB), so a string over 256 characters is split by tr.
+if ((${#MASKED} > 256)); then
   SEGMENTS="$(printf '%s\n' "$MASKED" | tr ';&|' '\n\n\n')"
 else
   SEGMENTS="${MASKED//[;&|]/$'\n'}"
@@ -353,7 +351,7 @@ deny_if "docker prune of all images or volumes"   "docker${SP}+(system${SP}+prun
 deny_if "docker compose down -v deletes volumes"  "docker${SP}+compose${SP}+down[^;&|]*(${SP}-[a-zA-Z]*v|--volumes)"
 
 # --- SQL: only when a SQL client is actually invoked (so commit messages that merely mention it pass) ---
-if hasi "(^|[^a-z])(psql|pgcli|mysql|mariadb|sqlite3|sqlcmd)([^a-z]|\$)"; then
+if hasi "(^|[^a-z])(${SQL_CLIENTS})([^a-z]|\$)"; then
   denyi_if "SQL DROP DATABASE/TABLE/SCHEMA" "drop${SP}+(database|table|schema)"
   denyi_if "SQL TRUNCATE"                   "truncate${SP}+(table${SP}+)?[a-z_\"]"
   denyi_if "SQL DELETE without WHERE"       "delete${SP}+from${SP}+[a-z_.\"]+${SP}*(;|\"|'|\$)"

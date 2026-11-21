@@ -160,6 +160,7 @@ Crew revision: $(printf '%s' "$oldrev" | cut -c1-7) -> $(printf '%s' "$newrev" |
     out="$(git -C "$WT" branch "$BRANCH" 2>&1)" || { RESULT="error (branch $BRANCH: $(printf '%s' "$out" | head -n 1))"; return 1; }
     RESULT="committed $BRANCH"; return 0
   fi
+  command -v gh >/dev/null 2>&1 || { RESULT="error (gh is required to open the PR, so nothing was sent to origin; use --local to commit only)"; return 1; }
   out="$(git -C "$WT" push -q origin "HEAD:refs/heads/$BRANCH" 2>&1)" || { RESULT="error (push failed: $(lastline "$out"))"; return 1; }
   create_pr "$base" "$subj" "$body"
 }

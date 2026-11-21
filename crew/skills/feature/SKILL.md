@@ -18,8 +18,9 @@ Rules for the whole run:
 - An agent may start in the background. Its result arrives as a notification: wait for it. Do not poll and do not schedule a wakeup, which only keeps the session alive after the work is done.
 - You do not write tests, skeletons or implementation yourself. When an agent's output is wrong, send it back with what is wrong.
 - Call crew agents without a `model`: each carries its own. One exception: an agent that failed twice on the same task is re-run once with `model` one tier up (sonnet to opus, opus to fable), never a third time at the same tier.
+- Every agent brief carries a tool-call budget N at or below the called agent's own `Budget:` line ("at most N tool calls, hand back what you have").
 - When you start a flow on your own (failing test first, delegating, escalating), say so in one line with the reason.
-- Stop and ask whenever the escalation list applies: architecture choices, new dependencies, pattern deviations, irreversible effects (moving value, sending, deleting, publishing), auth, migrations on existing data, production commands.
+- Stop and ask whenever the escalation list applies. Default escalation list: architecture choices, new dependencies, pattern deviations, irreversible effects (moving value, sending, deleting, publishing), auth, migrations on existing data, production commands. The project `CLAUDE.md` escalation list adds to this default.
 - Never commit or push to a protected branch. If you are on one, create a branch with plain `git checkout -b <branch>` first. Commit messages follow the project convention, with no co-author trailers unless the project asks.
 
 ## 1. Spec

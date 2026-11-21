@@ -12,7 +12,7 @@
 # The plugin's vendor/ folder holds what an adopted repo needs to update itself and is not loaded as plugin
 # content: crew-update.sh and the crew-update skill are always copied, the crew-update GitHub workflow only
 # when <repo>/.claude/crew.json sets "updateWorkflow": true (a workflow crew-vendor wrote is deleted when it is not).
-# A non-boolean updateWorkflow exits 1 and writes nothing. This script is itself copied to
+# A non-boolean updateWorkflow exits 2 and writes nothing. This script is itself copied to
 # .claude/hooks/crew/crew-vendor so a repo updates with its own copy; CREW_PLUGIN_DIR names the plugin folder
 # to read from (default: this script's own plugin root).
 set -u
@@ -68,7 +68,7 @@ read_update_workflow() {
   UPDATE_WORKFLOW=0
   [ -f "$cfg" ] || return 0
   jq -e 'type != "object" or (has("updateWorkflow") | not) or (.updateWorkflow | type == "boolean")' "$cfg" >/dev/null 2>&1 ||
-    { echo "crew-vendor: updateWorkflow must be true or false (nothing was changed)" >&2; exit 1; }
+    die "updateWorkflow must be true or false (nothing was changed)"
   jq -e 'type == "object" and .updateWorkflow == true' "$cfg" >/dev/null 2>&1 && UPDATE_WORKFLOW=1
   return 0
 }
@@ -257,7 +257,6 @@ atomic_put() {
 
 write_settings() {
   local f="$TARGET/$SETTINGS_REL" tmp
-  [ ! -e "$f" ] || [ -w "$f" ] || die "$SETTINGS_REL is read-only; refusing to replace it (nothing was changed)"
   mkdir -p "$TARGET/.claude"
   tmp="$TARGET/.claude/.crew-vendor.tmp.$$"
   if [ -e "$f" ]; then command cp -p "$f" "$tmp"; else : >"$tmp"; fi
@@ -301,6 +300,7 @@ OLDCMDS="$(lock_hook_cmds)"
 compute
 prepare_settings
 
+# The output below is parsed by vendor/crew-update.sh, bin/adopted-update and bin/adopted-status: keep its lines as they are.
 report_blockers() {
   if [ "$(count CLASH)" -gt 0 ]; then
     echo "Files that exist and were not written by crew-vendor (nothing was changed; decide per file):"
@@ -341,8 +341,6 @@ case "$CMD" in
     done
     if settings_behind; then problems=1; echo "behind the plugin: $SETTINGS_REL lacks the crew hook entries"; fi
     if lock_differs; then problems=1; echo "lock file is incomplete or out of date: run crew-vendor apply"; fi
-    # a lock file may also point at a file that was deleted by hand
-    awk -F'\t' '{print $1}' "$WORK/lock.tsv" | while IFS= read -r p; do [ -e "$TARGET/$p" ] || echo "missing: $p"; done | grep . && problems=1
     [ $problems -eq 0 ] && echo "crew-vendor check: up to date"
     [ $problems -eq 0 ]
     exit $?
@@ -360,7 +358,6 @@ case "$CMD" in
         DELETE)
           command rm -f "$TARGET/$p"; rmdir "$(dirname "$TARGET/$p")" 2>/dev/null; changed=1; echo "  removed $p"
           [ "$p" = ".github/workflows/crew-update.yml" ] && rmdir "$TARGET/.github" 2>/dev/null ;;
-        GONE) changed=1 ;;
       esac
     done <"$WORK/status"
     if settings_behind; then

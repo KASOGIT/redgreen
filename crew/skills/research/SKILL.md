@@ -11,6 +11,8 @@ You are the manager: delegate the reading to the crew, keep summaries in this se
 
 Subject: $ARGUMENTS
 
+Call crew agents without a `model`: each carries its own. One exception: an agent that failed twice on the same task is re-run once with `model` one tier up (sonnet to opus, opus to fable), never a third time at the same tier. Every agent brief carries a tool-call budget N at or below the called agent's own `Budget:` line ("at most N tool calls, hand back what you have").
+
 1. **Subject.** If it is a path to an existing plan file, resume it: read it and continue from its open questions.
 2. **Frame.** Restate the question as literals: inputs, expected outcome, constraints. Ask about whatever is ambiguous.
 3. **Research.** Run `crew:domain-researcher` for the constraints (repo docs, decision records, code; the web when the subject needs outside facts), then `crew:architecture-planner` for options with a recommendation. Launch independent agents in parallel, in one message. Spot-check the key evidence yourself.

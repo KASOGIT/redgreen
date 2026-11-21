@@ -8,7 +8,13 @@
 #   env        nojq | nogit: PATH lacks the tool and CREW_FALLBACK_PATH is empty; minpath: PATH holds only core
 #              tools and jq and git are reachable only through CREW_FALLBACK_PATH; jqfail: PATH holds core
 #              tools and a jq stub that exits 3
-#   maxms      fail when the hook takes longer than this many milliseconds
+#   maxms      fail when the hook takes longer than this many milliseconds (an absolute limit: keep it far
+#              above the measured time, since the suites run concurrently under bin/check)
+#   scalecmd   with maxratio: a smaller command of the same shape. The case fails when the CPU time of 8 hook
+#              runs on cmd, divided by that of 8 runs on scalecmd, exceeds maxratio
+#   maxratio   a scaling limit for a hook that must stay linear: CPU time (user + sys of the hook and its
+#              children) does not move under the load of concurrent suites the way wall time does. Linear
+#              growth gives about the size ratio (plus the fixed start-up cost), quadratic growth its square
 #   noprojdir  true: CLAUDE_PROJECT_DIR is left unset (the hook must find the config from cwd)
 #   stderr     list of strings that must all appear (case-insensitive) in the hook's stderr
 # CLAUDE_PROJECT_DIR points at the case's repo directory unless noprojdir is set.
@@ -17,12 +23,10 @@ set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 HOOK="${GUARD_HOOK:-$HERE/../guard-destructive.sh}"
 CASES="${GUARD_CASES:-$HERE/guard-cases.jsonl}"
-command -v jq >/dev/null || { echo "jq is required" >&2; exit 1; }
+source "$HERE/lib.sh"
+require_tools jq
 
-TMP="$(mktemp -d)"
-trap 'rm -rf "$TMP"' EXIT
-export HOME="$TMP/home" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null
-mkdir -p "$HOME"
+scratch_setup
 git init -q --bare "$TMP/remote.git"
 git init -q -b main "$TMP/main"
 git -C "$TMP/main" -c user.email=t@t -c user.name=t commit -q --allow-empty -m init
@@ -34,57 +38,51 @@ git -C "$TMP/feature" checkout -q -b feature/x
 git -C "$TMP/feature" branch --unset-upstream 2>/dev/null || true
 git clone -q -b stable "$TMP/remote.git" "$TMP/stable" 2>/dev/null
 mkdir -p "$TMP/none"
-mkdir -p "$TMP/core" "$TMP/corejq" "$TMP/fake" "$TMP/jqfail"
-for t in cat grep egrep tr sed head tail mkdir cksum cut wc dirname basename find rm env sort uniq id; do
-  p="$(command -v "$t" || true)"
-  if [[ -n "$p" ]]; then ln -sf "$p" "$TMP/core/$t"; ln -sf "$p" "$TMP/corejq/$t"; ln -sf "$p" "$TMP/jqfail/$t"; fi
-done
-ln -sf "$(command -v jq)" "$TMP/corejq/jq"
-printf '#!/bin/sh\nexit 3\n' >"$TMP/jqfail/jq"
-chmod +x "$TMP/jqfail/jq"
-ln -sf "$(command -v jq)" "$TMP/fake/jq"
-ln -sf "$(command -v git)" "$TMP/fake/git"
-BASH_BIN="$(command -v bash)"
-
-SEP=$'\x1f'
 now_ms() { perl -MTime::HiRes=time -e 'print int(time*1000)'; }
 
-fail=0
-total=0
-if ! jq -r --arg d "$TMP" '[.expect, (.repo // "none"), (.env // "-"), ((.noprojdir // false) | tostring), (has("config") | tostring), ((.maxms // 0) | tostring), ((.stderr // []) | join("\u001e")),
-  ({tool_input: {command: .cmd}, cwd: ($d + "/" + (.repo // "none"))} | tojson), (.cmd | tojson), (if has("config") then (.config | tojson) else "" end)] | join("\u001f")' "$CASES" >"$TMP/cases.records"; then
-  echo "FAIL cannot parse cases file $CASES (malformed line?)" >&2
-  exit 1
-fi
-expected_cases=$(grep -c . "$CASES")
+# hook_cpu_ms <hook input>: runs the hook 8 times in the current case's environment, prints the total CPU
+# milliseconds of those runs (the clock ticks every 10 ms, so one run is too coarse to compare).
+hook_cpu_ms() {
+  printf '%s' "$1" >"$TMP/scale.in"
+  perl -e 'my $in = shift; open(my $so, ">&", \*STDOUT); for (1 .. 8) { open(STDIN, "<", $in); open(STDOUT, ">", "/dev/null"); open(STDERR, ">", "/dev/null"); system(@ARGV); }
+    open(STDOUT, ">&", $so); my @t = times; print int(($t[2] + $t[3]) * 1000)' "$TMP/scale.in" \
+    env -u CLAUDE_PROJECT_DIR -u CREW_FALLBACK_PATH ${env_args[@]+"${env_args[@]}"} PATH="$hook_path" "$BASH_BIN" "$HOOK"
+}
+
+load_cases --arg d "$TMP" '[.expect, (.repo // "none"), (.env // "-"), ((.noprojdir // false) | tostring), (has("config") | tostring), ((.maxms // 0) | tostring), ((.maxratio // 0) | tostring), ((.stderr // []) | join("\u001e")),
+  ({tool_input: {command: .cmd}, cwd: ($d + "/" + (.repo // "none"))} | tojson), (.cmd | tojson), (if has("scalecmd") then ({tool_input: {command: .scalecmd}, cwd: ($d + "/" + (.repo // "none"))} | tojson) else "" end), (if has("config") then (.config | tojson) else "" end)] | join("\u001f")'
 # One jq pass reads every case: a record per line, fields joined by the unit separator. The hook
 # input and the command travel as compact JSON (single line, control characters escaped).
-while IFS="$SEP" read -r expect repo envname noproj has_config maxms stderr_has input cmd_json config_json; do
+while IFS="$SEP" read -r expect repo envname noproj has_config maxms maxratio stderr_has input cmd_json scale_input config_json; do
   total=$((total + 1))
   mkdir -p "$TMP/$repo/.claude"
   rm -f "$TMP/$repo/.claude/crew.json"
   [[ "$has_config" != true ]] || printf '%s' "$config_json" | jq -j '.' >"$TMP/$repo/.claude/crew.json"
   env_args=()
   [[ "$noproj" == true ]] || env_args+=(CLAUDE_PROJECT_DIR="$TMP/$repo")
-  hook_path="$PATH"
-  case "$envname" in
-    nojq) hook_path="$TMP/core"; env_args+=(CREW_FALLBACK_PATH="") ;;
-    nogit) hook_path="$TMP/corejq"; env_args+=(CREW_FALLBACK_PATH="") ;;
-    jqfail) hook_path="$TMP/jqfail"; env_args+=(CREW_FALLBACK_PATH="") ;;
-    minpath) hook_path="$TMP/core"; env_args+=(CREW_FALLBACK_PATH="$TMP/fake") ;;
-  esac
+  apply_env_mode "$envname"
   t0=0
   [[ "$maxms" -eq 0 ]] || t0="$(now_ms)"
   set +e
   out="$(printf '%s' "$input" | env -u CLAUDE_PROJECT_DIR -u CREW_FALLBACK_PATH ${env_args[@]+"${env_args[@]}"} PATH="$hook_path" "$BASH_BIN" "$HOOK" 2>"$TMP/hook.stderr")"
   rc=$?
   set -e
-  if [[ "$maxms" -gt 0 ]]; then
-    t1="$(now_ms)"
-    if [[ $((t1 - t0)) -gt "$maxms" ]]; then
-      fail=$((fail + 1))
+  t1=0
+  [[ "$maxms" -eq 0 ]] || t1="$(now_ms)"
+  if [[ "$maxratio" -gt 0 ]]; then
+    small_cpu="$(hook_cpu_ms "$scale_input")"
+    big_cpu="$(hook_cpu_ms "$input")"
+    [[ "$small_cpu" -ge 1 ]] || small_cpu=1
+    if [[ $((big_cpu * 100 / small_cpu)) -gt $((maxratio * 100)) ]]; then
       cmd="$(printf '%s' "$cmd_json" | jq -r '.')"
-      echo "FAIL took $((t1 - t0)) ms, limit $maxms: ${cmd:0:60}"
+      record_fail "scaling: ${big_cpu} ms CPU vs ${small_cpu} ms for 8 runs is $((big_cpu * 100 / small_cpu))% (limit $((maxratio * 100))%): ${cmd:0:60}"
+      continue
+    fi
+  fi
+  if [[ "$maxms" -gt 0 ]]; then
+    if [[ $((t1 - t0)) -gt "$maxms" ]]; then
+      cmd="$(printf '%s' "$cmd_json" | jq -r '.')"
+      record_fail "took $((t1 - t0)) ms, limit $maxms: ${cmd:0:60}"
       continue
     fi
   fi
@@ -95,22 +93,18 @@ while IFS="$SEP" read -r expect repo envname noproj has_config maxms stderr_has 
     got=ask
   fi
   if [[ "$got" != "$expect" ]]; then
-    fail=$((fail + 1))
     cmd="$(printf '%s' "$cmd_json" | jq -r '.')"
-    echo "FAIL expected=$expect got=$got repo=$repo: $cmd"
+    record_fail "expected=$expect got=$got repo=$repo: $cmd"
   elif [[ -n "$stderr_has" ]]; then
     IFS=$'\x1e' read -r -a wanted <<<"$stderr_has"
     for w in "${wanted[@]}"; do
       if ! grep -qiF -- "$w" "$TMP/hook.stderr"; then
-        fail=$((fail + 1))
         cmd="$(printf '%s' "$cmd_json" | jq -r '.')"
-        echo "FAIL stderr lacks '$w' (got: $(head -c 120 "$TMP/hook.stderr" | tr '\n' ' ')): $cmd"
+        record_fail "stderr lacks '$w' (got: $(head -c 120 "$TMP/hook.stderr" | tr '\n' ' ')): $cmd"
         break
       fi
     done
   fi
 done <"$TMP/cases.records"
 
-[[ $total -eq $expected_cases ]] || { echo "FAIL ran $total cases, $CASES holds $expected_cases" >&2; exit 1; }
-echo "$((total - fail))/$total cases passed"
-[[ $fail -eq 0 ]]
+finish_run ran "$total"

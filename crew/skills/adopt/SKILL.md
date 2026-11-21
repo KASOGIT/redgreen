@@ -20,7 +20,7 @@ Rules:
 
 When `.claude/crew.lock.json` already exists, the repo is adopted. Update mode is self-contained and replaces steps 1 to 7 (no inspection, no questions, no project facts, no plugin switch-off). Do this instead.
 
-This skill runs only where the plugin is enabled. In a repo where step 6 turned it off locally, `/crew:adopt` is unknown there: run the same steps with the script by its path in a plugin checkout or install (`<plugin root>/bin/crew-vendor plan|apply|check .`), or re-enable the plugin for the session.
+This skill runs only where the plugin is enabled. In a repo where step 6 turned it off locally, `/crew:adopt` is unknown there: run the same steps with the script by its path in a plugin checkout or install (`<plugin root>/bin/crew-vendor plan|apply|check .`), or use the repo's own `/crew-update` skill (it proposes the update as a pull request and follows this keep/take procedure), or re-enable the plugin for the session.
 
 1. Run `crew-vendor plan .` and show the summary and the diffs.
 2. For each EDITED file, ask: keep or take. Take: delete the file, so the apply installs the plugin version. Keep: first move the local change to a differently named file (for example a project skill) and give it a different frontmatter `name:` too, otherwise `crew-vendor` reports a name CLASH. Then delete the vendored file so `apply` restores it. `apply` refuses while a vendored file is edited.
@@ -43,7 +43,7 @@ Find, and note the evidence for each:
 
 ## 2. Ask only what you could not determine
 
-At most five questions, each with your best guess as the default: which areas are costly to get wrong (irreversible effects: what a mistake costs in this product's domain, auth, data migrations, production admin commands, personal data), because they become the escalation list; protected branches and base branch if unclear; RED and GREEN as separate commits (default yes); hook mode, `nudge` (default) or `enforce`; and the source roots if the layout is ambiguous.
+At most five questions, each with your best guess as the default: which areas are costly to get wrong (irreversible effects: what a mistake costs in this product's domain, auth, data migrations, production admin commands, personal data), because they become the escalation list; protected branches and base branch if unclear; hook mode, `nudge` (default) or `enforce`; and the source roots if the layout is ambiguous.
 
 ## 3. Plan, then wait
 
@@ -65,4 +65,4 @@ If the user has the plugin enabled themselves, they would now see every agent tw
 
 ## 7. Finish
 
-Show a table of what you created, changed and skipped. Tell the user: commit `CLAUDE.md` and `.claude/` (the lock file included, `.claude/settings.local.json` excluded, so suggest adding it to `.gitignore` if it is not already); teammates then need nothing, and `/feature <requirement>` starts the workflow. To update later, run this skill again (update mode), or run `crew-vendor plan|apply|check .` by its path from a plugin checkout, since the plugin is off here; `crew-vendor check .` shows whether the copy is behind or edited. Offer, but do not do, a commit on a new branch (for example `chore/crew-setup`, staging by explicit path) and a PR. Ask before either.
+Show a table of what you created, changed and skipped. Tell the user: commit `CLAUDE.md` and `.claude/` (the lock file included, `.claude/settings.local.json` excluded, so suggest adding it to `.gitignore` if it is not already); teammates then need nothing, and `/feature <requirement>` starts the workflow. To update later, run this skill again (update mode), or run `crew-vendor plan|apply|check .` by its path from a plugin checkout, or `/crew-update` in the repo, since the plugin is off here; `crew-vendor check .` shows whether the copy is behind or edited. Offer, but do not do, a commit on a new branch (for example `chore/crew-setup`, staging by explicit path) and a PR. Ask before either.

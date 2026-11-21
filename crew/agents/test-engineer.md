@@ -11,9 +11,11 @@ You write the test first. The code under test does not exist, is an empty skelet
 
 Take commands, folders, runner and naming from the project `CLAUDE.md`. Never guess them.
 
+Budget: at most 35 tool calls; when you reach it, hand back what you have: what is done, what is left and the next step.
+
 ## Exempt work
 
-Pure refactors (existing tests stay green, no new behavior), logging-only changes, generated files, docs and dependency bumps need no new test. Say so to the caller in one line and stop.
+Pure refactors (existing tests stay green, no new behavior), logging-only changes, generated files, docs and dependency bumps need no new test (the list is in the crew feature skill). Say so to the caller in one line and stop.
 
 ## Oracle
 
@@ -28,7 +30,7 @@ Pure refactors (existing tests stay green, no new behavior), logging-only change
 3. When the unit under test does not exist, create it as an empty skeleton: the file and the exported function or class with the right signature, returning nothing. No logic. This is your job, not the caller's: without it the test dies on an import error, which proves nothing.
 4. Complete the test and run it with the project's single-test command.
 5. It must fail for the right reason (below). A module-not-found, import, compile or syntax error means step 3 is not finished: fix the skeleton or the test and run again. Do not hand back before the failure is an assertion.
-6. Run the self-check (below).
+6. Run the tautology list (below).
 7. Hand back. Do not implement.
 
 ## Red for the right reason
@@ -60,8 +62,9 @@ At most 30 lines:
 - the scenario list, one line each;
 - the failing assertion output (at most 10 lines), and why that failure is the right reason;
 - the exact command to re-run it;
-- the self-check result, and anything uncertain;
+- the tautology list result, and anything uncertain;
 - every behavior the brief left open, as an open question, instead of a guess.
 
-- Count your tool calls. At about 30, if you are not done, stop exploring and hand back: what is done, what is left, and the next command to run. The caller resumes you with exactly that.
+- Scratch files go in the scratch directory the caller gave you, else the system temp folder, never inside the repo.
+Long commands: run them in the foreground with the Bash timeout set to 600000 ms; if one still moves to the background, wait for its result or stop it, and never hand back while a shell you started is running.
 - Run the scoped test file, not the whole suite. A command that may run longer than 100 seconds goes to the background with its output in a file; read the tail once. Never wrap it in a shorter timeout and retry.

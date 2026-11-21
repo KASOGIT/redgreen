@@ -66,22 +66,10 @@ HOOK="$(cd "$(dirname "$HOOK")" && pwd)/$(basename "$HOOK")"
 CASES="${SPEC_FIRST_CASES:-$HERE/spec-first-cases.jsonl}"
 BASE_CONFIG="$HERE/fixtures/api-layout.json"
 EXAMPLE_CONFIG="$HERE/../crew.example.json"
-command -v jq >/dev/null || { echo "jq is required" >&2; exit 1; }
-command -v git >/dev/null || { echo "git is required" >&2; exit 1; }
-BASH_BIN="$(command -v bash)"
-JQ_BIN="$(command -v jq)"
-CAT_BIN="$(command -v cat)"
-SEP=$'\x1f'
+source "$HERE/lib.sh"
+require_tools jq git
 
-TMP="$(mktemp -d)"
-trap 'chmod -R u+w "$TMP" 2>/dev/null || true; rm -rf "$TMP"' EXIT
-export HOME="$TMP/home" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null
-mkdir -p "$HOME"
-mkdir -p "$TMP/core" "$TMP/fake"
-for t in cat grep egrep tr sed head tail mkdir cksum cut wc dirname basename find rm env sort uniq date id mktemp chmod ln; do
-  p="$(command -v "$t" || true)"; [[ -z "$p" ]] || ln -sf "$p" "$TMP/core/$t"
-done
-ln -sf "$JQ_BIN" "$TMP/fake/jq"; ln -sf "$(command -v git)" "$TMP/fake/git"
+scratch_setup
 
 git_in() { local dir="$1"; shift; git -C "$dir" -c user.email=t@t -c user.name=t -c commit.gpgsign=false "$@"; }
 
@@ -152,21 +140,14 @@ RS=$'\x1e'
 SHARD_COUNT="${SHARD_COUNT:-1}"
 SHARD_INDEX="${SHARD_INDEX:-0}"
 
-fail=0
-total=0
-skipped=0
 n=0
 idx=0
-if ! jq -r '[.name, .file // "", .expect, .mode // "nudge", .repo // "feature", .pathmode // "abs", .tool // "Edit", .env // "-", (has("input") | tostring), ((.new // false) | tostring), (if has("runs") then (.runs | length) else (.repeat // 1) end | tostring), (has("branch") | tostring), (.branch // ""), ((.skip_if_root // false) | tostring), (has("runs") | tostring), (.pattern // "-"), ((.nosession // false) | tostring), (if has("log") then .log else true end | tostring), (.agent // ""),
+load_cases '[.name, .file // "", .expect, .mode // "nudge", .repo // "feature", .pathmode // "abs", .tool // "Edit", .env // "-", (has("input") | tostring), ((.new // false) | tostring), (if has("runs") then (.runs | length) else (.repeat // 1) end | tostring), (has("branch") | tostring), (.branch // ""), ((.skip_if_root // false) | tostring), (has("runs") | tostring), (.pattern // "-"), ((.nosession // false) | tostring), (if has("log") then .log else true end | tostring), (.agent // ""),
   (.config // "."), ((.configRaw // "") | tojson), (has("configRaw") | tostring), ((.noconfig // false) | tostring), (.configmode // ""), (.context // ""), (.scope // ""), (.base // ""),
   (if has("input") then (.input | tojson) else "" end),
   (. as $c | ([{file: $c.file, new: ($c.new // false)}] + [($c.runs // [])[] | {file: (.file // $c.file), new: (.new // $c.new // false)}]) | map(select(.file != null and .new == false) | .file) | unique | join("\u001e")),
   ((.setup // []) | join("\u001e")),
-  ((.runs // []) | tojson)] | join("\u001f")' "$CASES" >"$TMP/cases.records"; then
-  echo "FAIL cannot parse cases file $CASES (malformed line?)" >&2
-  exit 1
-fi
-expected_cases=$(grep -c . "$CASES")
+  ((.runs // []) | tojson)] | join("\u001f")'
 # One jq pass reads every case: a record per line, fields joined by the unit separator, lists by the
 # record separator. Free text that may hold control characters (raw input, raw config) travels as compact JSON.
 while IFS="$SEP" read -r name file expect mode repo_kind pathmode tool envname has_input newfile repeat has_branch case_branch skip_root has_runs pattern nosession wantlog case_agent conf_edit conf_raw_json has_raw noconf confmode case_context case_scope case_base input_json files_field setup_field runs_json_all; do
@@ -236,20 +217,17 @@ while IFS="$SEP" read -r name file expect mode repo_kind pathmode tool envname h
     apply "$work" "${op%% *}" "${op#* }"
   done < <(printf '%s\n' ${setup_arr[@]+"${setup_arr[@]}"})
 
-  hook_path="$PATH"
   run_dir="$TMP"
   env_args=()
   tmpd="$TMP/tmpdirs/$n"
   mkdir -p "$tmpd"
   proj_expect="$work"
   case "$envname" in
-    minpath) hook_path="$TMP/core"; env_args+=(CLAUDE_PROJECT_DIR="$work" CREW_FALLBACK_PATH="$TMP/fake") ;;
-    nojq) mkdir -p "$TMP/nobin"; hook_path="$TMP/nobin"; env_args+=(CLAUDE_PROJECT_DIR="$work" CREW_FALLBACK_PATH="") ;;
-    nogit) mkdir -p "$TMP/jqonly"; ln -sf "$JQ_BIN" "$TMP/jqonly/jq"; ln -sf "$CAT_BIN" "$TMP/jqonly/cat"; hook_path="$TMP/jqonly"; env_args+=(CLAUDE_PROJECT_DIR="$work" CREW_FALLBACK_PATH="") ;;
     noprojdir) run_dir="$repo/services/core"; proj_expect="" ;;
     badprojdir) env_args+=(CLAUDE_PROJECT_DIR="$TMP/elsewhere"); proj_expect="" ;;
     *) env_args+=(CLAUDE_PROJECT_DIR="$work") ;;
   esac
+  apply_env_mode "$envname"
   case "$envname" in
     badtmpdir) env_args+=(TMPDIR="$TMP/no-such-tmpdir") ;;
     reltmpdir) env_args+=(TMPDIR=.); run_dir="$tmpd" ;;
@@ -398,12 +376,8 @@ while IFS="$SEP" read -r name file expect mode repo_kind pathmode tool envname h
   fi
 
   if [[ "$got" != "$expect" ]]; then
-    fail=$((fail + 1))
-    echo "FAIL expected=$expect got=$got: $name"
+    record_fail "expected=$expect got=$got: $name"
   fi
 done <"$TMP/cases.records"
 
-[[ $idx -eq $expected_cases ]] || { echo "FAIL read $idx cases, $CASES holds $expected_cases" >&2; exit 1; }
-[[ $skipped -eq 0 ]] || echo "$skipped case(s) skipped (running as root)"
-echo "$((total - fail))/$total cases passed"
-[[ $fail -eq 0 ]]
+finish_run read "$idx"

@@ -6,7 +6,7 @@
     {
       "name": "crew",
       "source": "./crew",
-      "description": "Spec, plan, RED, GREEN, critique and report: seven subagents and six workflow skills (feature, debug, review, research, audit, adopt).",
+      "description": "Spec, plan, RED, GREEN, critique and report: subagents and the workflow skills feature, debug, review, research, audit and adopt.",
       "category": "workflow",
       "tags": ["tdd", "subagents", "review", "workflow"]
     },

@@ -1,5 +1,5 @@
 {
-  "$schema": "./crew.schema.json",
+  "$schema": "../../crew.schema.json",
   "$comment": "Test fixture: a nested layout with numeric-prefixed cross-cutting layers, kept to prove that layout stays reproducible through config. Not an example for users, see ../../crew.example.json.",
   "baseBranch": "main",
   "protectedBranches": [
