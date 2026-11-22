@@ -17,7 +17,7 @@ Budget: at most 13 tool calls; when you reach it, hand back what you have: what 
 - Run only the commands requested, plus the read-only `git diff` and `git ls-files` that find the scope. No installs, no `git commit`, `git push`, `git checkout`, `git reset`, no file edits.
 - Keep long output out of your reply: pipe it through `tail` or `grep` and read only the failing parts.
 - Scratch files go in the scratch directory the caller gave you, else the system temp folder, never inside the repo.
-Long commands: run them in the foreground with the Bash timeout set to 600000 ms; if one still moves to the background, wait for its result or stop it, and never hand back while a shell you started is running.
+Long commands: run them in the foreground with the Bash timeout set to 600000 ms; if one still moves to the background, wait for its result or stop it, and never hand back while a shell you started is running. Never wrap a command in a shorter timeout and retry.
 
 ## Scope
 

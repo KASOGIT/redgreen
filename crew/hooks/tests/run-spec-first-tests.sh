@@ -25,8 +25,9 @@
 #   noconfig   true: no config file at all
 #   configmode chmod applied to the config file, for example "000" (skipped as root)
 #   pattern   with expect nudged, one N or S per run (default N for a single run)
-#   runs      [{"file", "session", "new", "agent", "context"}, ...]: one hook run per entry against the same
-#             repo, each entry overriding the case's file, the session id (default sess-1), new, agent, context
+#   runs      [{"file", "session", "new", "agent", "context", "scope"}, ...]: one hook run per entry against the same
+#             repo, each entry overriding the case's file, the session id (default sess-1), new, agent, context, scope
+#   ci_fs     true: skip unless the filesystem under the scratch folder is case-insensitive
 #   agent     agent_id sent in the input (a subagent call); default none
 #   nosession true: the input has no session_id
 #   log       false: with expect nudged, no log line is expected (unwritable or unset log directory)
@@ -41,7 +42,9 @@
 #             commitdelete (git rm, commit on the branch), detach (detach HEAD),
 #             readonly-metrics (make the plugin data directory read-only),
 #             basebranch (create refs/remotes/origin/<path> at origin/main),
-#             localbranch (create or move local branch <path> to main), localbranchhead (same, to HEAD)
+#             localbranch (create or move local branch <path> to main), localbranchhead (same, to HEAD),
+#             gitinit (a separate git repo at <path>, relative to the repo root, with one empty commit on main),
+#             worktree (a detached worktree of the repo at <path>, relative to the repo root, replacing what is there)
 #   pathmode  abs (default) | rel (relative to the repo root) | relapi (relative to services/core) | nocwd
 #   tool      Edit (default) | Write | MultiEdit
 #   env       nojq | nogit: run with a PATH that lacks the tool
@@ -70,6 +73,10 @@ source "$HERE/lib.sh"
 require_tools jq git
 
 scratch_setup
+
+CASE_INSENSITIVE_FS=false
+: >"$TMP/CaseProbe"
+[[ ! -e "$TMP/caseprobe" ]] || CASE_INSENSITIVE_FS=true
 
 git_in() { local dir="$1"; shift; git -C "$dir" -c user.email=t@t -c user.name=t -c commit.gpgsign=false "$@"; }
 
@@ -111,6 +118,8 @@ apply() {
     basebranch) git_in "$dir" update-ref "refs/remotes/origin/$path" refs/remotes/origin/main ;;
     localbranch) git_in "$dir" branch -f "$path" main ;;
     localbranchhead) git_in "$dir" branch -f "$path" HEAD ;;
+    worktree) command rm -r -f "$dir/$path"; git_in "$dir" worktree add -q --detach "$dir/$path" ;;
+    gitinit) git init -q -b main "$dir/$path"; git_in "$dir/$path" commit -q --allow-empty -m init ;;
     *) echo "setup: unknown verb: $verb" >&2; exit 1 ;;
   esac
 }
@@ -143,14 +152,14 @@ SHARD_INDEX="${SHARD_INDEX:-0}"
 n=0
 idx=0
 load_cases '[.name, .file // "", .expect, .mode // "nudge", .repo // "feature", .pathmode // "abs", .tool // "Edit", .env // "-", (has("input") | tostring), ((.new // false) | tostring), (if has("runs") then (.runs | length) else (.repeat // 1) end | tostring), (has("branch") | tostring), (.branch // ""), ((.skip_if_root // false) | tostring), (has("runs") | tostring), (.pattern // "-"), ((.nosession // false) | tostring), (if has("log") then .log else true end | tostring), (.agent // ""),
-  (.config // "."), ((.configRaw // "") | tojson), (has("configRaw") | tostring), ((.noconfig // false) | tostring), (.configmode // ""), (.context // ""), (.scope // ""), (.base // ""),
+  (.config // "."), ((.configRaw // "") | tojson), (has("configRaw") | tostring), ((.noconfig // false) | tostring), (.configmode // ""), (.context // ""), (.scope // ""), (.base // ""), ((.ci_fs // false) | tostring),
   (if has("input") then (.input | tojson) else "" end),
   (. as $c | ([{file: $c.file, new: ($c.new // false)}] + [($c.runs // [])[] | {file: (.file // $c.file), new: (.new // $c.new // false)}]) | map(select(.file != null and .new == false) | .file) | unique | join("\u001e")),
   ((.setup // []) | join("\u001e")),
   ((.runs // []) | tojson)] | join("\u001f")'
 # One jq pass reads every case: a record per line, fields joined by the unit separator, lists by the
 # record separator. Free text that may hold control characters (raw input, raw config) travels as compact JSON.
-while IFS="$SEP" read -r name file expect mode repo_kind pathmode tool envname has_input newfile repeat has_branch case_branch skip_root has_runs pattern nosession wantlog case_agent conf_edit conf_raw_json has_raw noconf confmode case_context case_scope case_base input_json files_field setup_field runs_json_all; do
+while IFS="$SEP" read -r name file expect mode repo_kind pathmode tool envname has_input newfile repeat has_branch case_branch skip_root has_runs pattern nosession wantlog case_agent conf_edit conf_raw_json has_raw noconf confmode case_context case_scope case_base ci_fs input_json files_field setup_field runs_json_all; do
   idx=$((idx + 1))
   [[ $((idx % SHARD_COUNT)) -eq "$SHARD_INDEX" ]] || continue
   n=$((n + 1))
@@ -158,6 +167,10 @@ while IFS="$SEP" read -r name file expect mode repo_kind pathmode tool envname h
   IFS="$RS" read -ra files_arr <<<"$files_field"
   IFS="$RS" read -ra setup_arr <<<"$setup_field"
 
+  if [[ "$ci_fs" == true && "$CASE_INSENSITIVE_FS" != true ]]; then
+    skipped=$((skipped + 1))
+    continue
+  fi
   if [[ ( "$skip_root" == true || -n "$confmode" ) && "$(id -u)" -eq 0 ]]; then
     skipped=$((skipped + 1))
     continue
@@ -237,7 +250,7 @@ while IFS="$SEP" read -r name file expect mode repo_kind pathmode tool envname h
   guard_cmd=()
   if [[ "$envname" == fifo ]]; then
     guard_cmd=(perl -e 'alarm 10; exec @ARGV')
-    read -r fh fl _ <<<"$(printf '%s\n%s\n%s' sess-1 "$(printf '%s' "$file" | cut -d/ -f4)" "$case_agent" | cksum)"
+    read -r fh fl _ <<<"$(printf '%s\n%s\n%s\n%s' sess-1 services/core/src "$(printf '%s' "$file" | cut -d/ -f4)" "$case_agent" | cksum)"
     mkfifo "$tmpd/crew-spec-first-nudge-$(id -u)-$fh-$fl"
   fi
   env_args+=(PATH="$hook_path")
@@ -253,13 +266,15 @@ while IFS="$SEP" read -r name file expect mode repo_kind pathmode tool envname h
     run_new="$newfile"
     run_agent="$case_agent"
     run_ctx_override="$case_context"
+    run_scope="$case_scope"
     if [[ "$has_runs" == true ]]; then
-      IFS="$SEP" read -r rf rs rn ra rc_ <<<"$(printf '%s' "$runs_json_all" | jq -r --argjson i "$i" '.[$i] | [.file // "", .session // "", ((.new // "-") | tostring), .agent // "", .context // ""] | join("\u001f")')"
+      IFS="$SEP" read -r rf rs rn ra rc_ rsc <<<"$(printf '%s' "$runs_json_all" | jq -r --argjson i "$i" '.[$i] | [.file // "", .session // "", ((.new // "-") | tostring), .agent // "", .context // "", .scope // ""] | join("\u001f")')"
       [[ -z "$rf" ]] || run_file="$rf"
       [[ -z "$rs" ]] || run_sess="$rs"
       [[ "$rn" == - ]] || run_new="$rn"
       [[ -z "$ra" ]] || run_agent="$ra"
       [[ -z "$rc_" ]] || run_ctx_override="$rc_"
+      [[ -z "$rsc" ]] || run_scope="$rsc"
     fi
     run_nudged=false
     [[ "$expect" != nudged || "${pattern:i:1}" != N ]] || run_nudged=true
@@ -267,7 +282,7 @@ while IFS="$SEP" read -r name file expect mode repo_kind pathmode tool envname h
     ctx="$(printf '%s' "$run_file" | cut -d/ -f4)"
     [[ -z "$run_ctx_override" ]] || ctx="$run_ctx_override"
     [[ "$run_ctx_override" != "<none>" ]] || ctx=""
-    runs_json="$(jq -c --arg f "$run_file" --arg s "$run_sess" --arg c "$ctx" --argjson n "$run_new" --argjson u "$run_nudged" '. + [{file: $f, session: ($s | gsub("[\u0000-\u001f]"; "")), context: $c, new: $n, nudged: $u}]' <<<"$runs_json")"
+    runs_json="$(jq -c --arg f "$run_file" --arg s "$run_sess" --arg c "$ctx" --arg sc "$run_scope" --argjson n "$run_new" --argjson u "$run_nudged" '. + [{file: $f, session: ($s | gsub("[\u0000-\u001f]"; "")), context: $c, scope: $sc, new: $n, nudged: $u}]' <<<"$runs_json")"
 
     if [[ "$has_input" == true ]]; then
       printf '%s' "$input_json" | jq -j '.' >"$TMP/in.json"
@@ -323,8 +338,9 @@ while IFS="$SEP" read -r name file expect mode repo_kind pathmode tool envname h
           N)
             nudge_count=$((nudge_count + 1))
             run_ctx="$(jq -r ".[$i].context" <<<"$runs_json")"
-            if [[ -n "$case_scope" ]]; then
-              want_scope="$case_scope"
+            run_scope="$(jq -r ".[$i].scope" <<<"$runs_json")"
+            if [[ -n "$run_scope" ]]; then
+              want_scope="$run_scope"
             elif [[ "$run_ctx" =~ ^[0-9]{2}_ ]]; then
               want_scope="services/core/src/"
             else

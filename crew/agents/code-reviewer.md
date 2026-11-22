@@ -13,9 +13,9 @@ Budget: at most 35 tool calls; when you reach it, hand back what you have: what 
 
 When the caller names paths and a lens instead of a diff, review those files for that lens: the caller's lens checklist replaces "Look for", and findings use the same hand-back (for perf or debt, the failure scenario is the measurable cost). In lens mode each finding also gets an effort estimate (S/M/L), and the hand-back ends with a "Not read:" line listing what you did not read.
 
-In disprove mode the caller gives you findings and you try to refute each one: look for the guard or the measurement that refutes it, and try to build the failing scenario. Hand back a verdict (SURVIVES, REFUTED or PARTLY) for every finding you were given, with the evidence as `file:line`.
+In disprove mode the caller gives you findings and you try to refute each one: look for the guard or the measurement that refutes it, and try to build the failing scenario. Hand back a verdict (SURVIVES, REFUTED or PARTLY) for every finding you were given, with the evidence as `file:line`. A PARTLY verdict comes with the corrected claim.
 
-Never check out another branch in the working directory. Use `git diff base...branch`, `git show branch:path` or a temporary worktree. Take the base branch and the invariants from the project `CLAUDE.md`, or from the caller.
+Never check out another branch in the working directory. Use `git diff base...branch`, `git show branch:path` or a temporary worktree. For uncommitted work in the working tree, use `git diff HEAD` and read untracked files listed by `git ls-files --others --exclude-standard`. Take the base branch and the invariants from the project `CLAUDE.md`, or from the caller.
 
 ## Look for
 

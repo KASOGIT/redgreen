@@ -15,6 +15,7 @@
 #   maxratio   a scaling limit for a hook that must stay linear: CPU time (user + sys of the hook and its
 #              children) does not move under the load of concurrent suites the way wall time does. Linear
 #              growth gives about the size ratio (plus the fixed start-up cost), quadratic growth its square
+#   locale     value of LC_ALL for the hook (a UTF-8 locale makes bash count characters, not bytes)
 #   noprojdir  true: CLAUDE_PROJECT_DIR is left unset (the hook must find the config from cwd)
 #   stderr     list of strings that must all appear (case-insensitive) in the hook's stderr
 # CLAUDE_PROJECT_DIR points at the case's repo directory unless noprojdir is set.
@@ -49,11 +50,11 @@ hook_cpu_ms() {
     env -u CLAUDE_PROJECT_DIR -u CREW_FALLBACK_PATH ${env_args[@]+"${env_args[@]}"} PATH="$hook_path" "$BASH_BIN" "$HOOK"
 }
 
-load_cases --arg d "$TMP" '[.expect, (.repo // "none"), (.env // "-"), ((.noprojdir // false) | tostring), (has("config") | tostring), ((.maxms // 0) | tostring), ((.maxratio // 0) | tostring), ((.stderr // []) | join("\u001e")),
+load_cases --arg d "$TMP" '[.expect, (.repo // "none"), (.env // "-"), (.locale // "-"), ((.noprojdir // false) | tostring), (has("config") | tostring), ((.maxms // 0) | tostring), ((.maxratio // 0) | tostring), ((.stderr // []) | join("\u001e")),
   ({tool_input: {command: .cmd}, cwd: ($d + "/" + (.repo // "none"))} | tojson), (.cmd | tojson), (if has("scalecmd") then ({tool_input: {command: .scalecmd}, cwd: ($d + "/" + (.repo // "none"))} | tojson) else "" end), (if has("config") then (.config | tojson) else "" end)] | join("\u001f")'
 # One jq pass reads every case: a record per line, fields joined by the unit separator. The hook
 # input and the command travel as compact JSON (single line, control characters escaped).
-while IFS="$SEP" read -r expect repo envname noproj has_config maxms maxratio stderr_has input cmd_json scale_input config_json; do
+while IFS="$SEP" read -r expect repo envname locale noproj has_config maxms maxratio stderr_has input cmd_json scale_input config_json; do
   total=$((total + 1))
   mkdir -p "$TMP/$repo/.claude"
   rm -f "$TMP/$repo/.claude/crew.json"
@@ -61,12 +62,18 @@ while IFS="$SEP" read -r expect repo envname noproj has_config maxms maxratio st
   env_args=()
   [[ "$noproj" == true ]] || env_args+=(CLAUDE_PROJECT_DIR="$TMP/$repo")
   apply_env_mode "$envname"
+  [[ "$locale" == - ]] || env_args+=(LC_ALL="$locale")
   t0=0
   [[ "$maxms" -eq 0 ]] || t0="$(now_ms)"
   set +e
   out="$(printf '%s' "$input" | env -u CLAUDE_PROJECT_DIR -u CREW_FALLBACK_PATH ${env_args[@]+"${env_args[@]}"} PATH="$hook_path" "$BASH_BIN" "$HOOK" 2>"$TMP/hook.stderr")"
   rc=$?
   set -e
+  if [[ $rc -ne 0 && $rc -ne 2 ]]; then
+    cmd="$(printf '%s' "$cmd_json" | jq -r '.')"
+    record_fail "hook exited $rc (only 0 and 2 are verdicts): ${cmd:0:120}"
+    continue
+  fi
   t1=0
   [[ "$maxms" -eq 0 ]] || t1="$(now_ms)"
   if [[ "$maxratio" -gt 0 ]]; then
@@ -94,7 +101,7 @@ while IFS="$SEP" read -r expect repo envname noproj has_config maxms maxratio st
   fi
   if [[ "$got" != "$expect" ]]; then
     cmd="$(printf '%s' "$cmd_json" | jq -r '.')"
-    record_fail "expected=$expect got=$got repo=$repo: $cmd"
+    record_fail "expected=$expect got=$got repo=$repo: ${cmd:0:120}"
   elif [[ -n "$stderr_has" ]]; then
     IFS=$'\x1e' read -r -a wanted <<<"$stderr_has"
     for w in "${wanted[@]}"; do

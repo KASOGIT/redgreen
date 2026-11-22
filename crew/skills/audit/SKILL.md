@@ -20,7 +20,7 @@ Call crew agents without a `model`: each carries its own. One exception: an agen
    - bugs: wrong edge cases, swallowed errors, races, partial failure, type-safety escapes.
    - debt: duplication, dead code, layering violations against the repo's patterns, missing or weak tests, outdated or unused dependencies.
    - security: authorization before action, injection, secrets, personal data in logs, risky dependencies.
-4. **Disprove.** Run one disprove pass per area: a second `crew:code-reviewer` call in disprove mode, given that area's findings, whose only job is to disprove each one (look for the guard or the measurement that refutes it). Keep what survives, and keep a PARTLY verdict with its corrected claim.
+4. **Disprove.** With zero findings, skip this step. Otherwise run one disprove pass per area: a second `crew:code-reviewer` call in disprove mode, given that area's findings, whose only job is to disprove each one (look for the guard or the measurement that refutes it). Keep what survives, and keep a PARTLY verdict with its corrected claim.
 5. **Write.** A ranked table in a file: folder from the project `CLAUDE.md`, default `docs/audits/<lens>-<YYYY-MM-DD>.md`. Columns: rank, severity, `file:line`, failure scenario or cost, suggested fix, effort (S/M/L). Add what was dropped and why, and a coverage line listing what was not read.
 6. **Hand off.** The user picks findings. Offer `/crew:feature` for changes and `/crew:debug` for confirmed bugs.
 

@@ -1,5 +1,5 @@
 ---
 type: tool_used
 tool: Agent
-input_match: 'crew:test-runner'
+input_match: '"subagent_type"\s*:\s*"crew:test-runner"'
 ---

@@ -20,6 +20,8 @@ Budget: at most 35 tool calls; when you reach it, hand back what you have: what 
 - Exempt work (the list is in the crew feature skill) has no failing test: implement to the acceptance checks in the brief, run them and report their output.
 - No new dependency, no pattern deviation and no change outside the task without asking the caller.
 
+Long commands: run them in the foreground with the Bash timeout set to 600000 ms; if one still moves to the background, wait for its result or stop it, and never hand back while a shell you started is running. Never wrap a command in a shorter timeout and retry.
+
 ## Hand back
 
 At most 25 lines:
@@ -29,5 +31,4 @@ At most 25 lines:
 - anything uncertain, and any deviation from the repo's pattern.
 
 - Scratch files go in the scratch directory the caller gave you, else the system temp folder, never inside the repo.
-Long commands: run them in the foreground with the Bash timeout set to 600000 ms; if one still moves to the background, wait for its result or stop it, and never hand back while a shell you started is running.
-- Run the scoped test file, not the whole suite. A command that may run longer than 100 seconds goes to the background with its output in a file; read the tail once. Never wrap it in a shorter timeout and retry.
+- Run the scoped test file, not the whole suite.

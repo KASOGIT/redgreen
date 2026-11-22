@@ -64,7 +64,7 @@ record_fail() {
 # else prints the summary line (parsed by run-all.sh) and exits non-zero when a case failed.
 finish_run() {
   [[ $2 -eq $expected_cases ]] || { echo "FAIL $1 $2 cases, $CASES holds $expected_cases" >&2; exit 1; }
-  [[ $skipped -eq 0 ]] || echo "$skipped case(s) skipped (running as root)"
+  [[ $skipped -eq 0 ]] || echo "$skipped case(s) skipped (running as root, or the filesystem is case-sensitive)"
   echo "$((total - fail))/$total cases passed"
   [[ $fail -eq 0 ]]
 }

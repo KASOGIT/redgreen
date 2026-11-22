@@ -12,7 +12,7 @@ Rules:
 
 - Local, reversible edits only. Never overwrite a file without showing the diff and asking. Merge into an existing `CLAUDE.md`, never replace.
 - Never push, open a PR or message anyone without asking. Never commit to a protected branch.
-- Write only: `CLAUDE.md`, `.claude/rules/tdd.md`, `.claude/crew.json`, what `crew-vendor` writes, and (step 6) the local settings override. Nothing else, and nothing in `~/.claude`.
+- Write only: `CLAUDE.md`, `.claude/rules/tdd.md`, `.claude/crew.json`, what `crew-vendor` writes, and (step 6) the local settings override. Nothing else, and nothing in `~/.claude`, except the rename or delete a clash or keep/take decision calls for, done only with the user's OK.
 - Templates are in `${CLAUDE_PLUGIN_ROOT}/skills/adopt/templates/`. Fill the `<PLACEHOLDERS>` from what you found.
 - The script is `${CLAUDE_PLUGIN_ROOT}/bin/crew-vendor` (also on PATH while the plugin is enabled).
 
@@ -23,7 +23,7 @@ When `.claude/crew.lock.json` already exists, the repo is adopted. Update mode i
 This skill runs only where the plugin is enabled. In a repo where step 6 turned it off locally, `/crew:adopt` is unknown there: run the same steps with the script by its path in a plugin checkout or install (`<plugin root>/bin/crew-vendor plan|apply|check .`), or use the repo's own `/crew-update` skill (it proposes the update as a pull request and follows this keep/take procedure), or re-enable the plugin for the session.
 
 1. Run `crew-vendor plan .` and show the summary and the diffs.
-2. For each EDITED file, ask: keep or take. Take: delete the file, so the apply installs the plugin version. Keep: first move the local change to a differently named file (for example a project skill) and give it a different frontmatter `name:` too, otherwise `crew-vendor` reports a name CLASH. Then delete the vendored file so `apply` restores it. `apply` refuses while a vendored file is edited.
+2. For each EDITED file, ask: keep or take. Take: delete the file, so the apply installs the plugin version (this replaces the local file, so only after the user chose take). Keep: first move the local change to a differently named file (for example a project skill) and give it a different frontmatter `name:` too, otherwise `crew-vendor` reports a name CLASH. Then delete the vendored file so `apply` restores it. `apply` refuses while a vendored file is edited.
 3. Wait for the person's OK on the plan, with every keep or take decided. Do not run `apply` before it.
 4. Run `crew-vendor apply .`, then `crew-vendor check .` and show the result.
 5. Offer a commit on a branch (never a protected branch, staging by explicit path). Never push.
@@ -45,15 +45,17 @@ Find, and note the evidence for each:
 
 At most five questions, each with your best guess as the default: which areas are costly to get wrong (irreversible effects: what a mistake costs in this product's domain, auth, data migrations, production admin commands, personal data), because they become the escalation list; protected branches and base branch if unclear; hook mode, `nudge` (default) or `enforce`; and the source roots if the layout is ambiguous.
 
-## 3. Plan, then wait
+## 3. Write crew.json, plan, then wait
 
-Run `crew-vendor plan .` (nothing is written). Show its output and, next to it, every project file you will create or modify, one line each, and what you leave alone. At most 30 lines of your own. If the plan reports clashes (files the repo already has with the same name as a crew file) or local edits, list them: the user decides per file, and you do not apply the copy until they have. Wait for an explicit OK.
+First write `.claude/crew.json` from `templates/crew.json`: the config the hooks read. The schema is `${CLAUDE_PLUGIN_ROOT}/hooks/crew.schema.json`: read it for valid keys and values, and an example sits beside it. Do not restate the schema anywhere. Validate the result against it when a validator is available, otherwise at least `jq . .claude/crew.json`. `managerModel` is optional and is left out unless the repo's owner asks for the `feature` workflow to start on a given model; with it, `crew-vendor` writes `model: <value>` into the copied `feature` skill. It comes first because the plan reads it.
+
+Then run `crew-vendor plan .` (the plan itself writes nothing). Show its output and, next to it, every project file you will create or modify, one line each, and what you leave alone. At most 30 lines of your own. If the plan reports a CLASH (a file the repo already has with the same name as a crew file) or local edits, list them: the user decides per file, as in update mode (keep or take, where take replaces the local file only after the user chose it, or rename the local file and give it a different frontmatter `name:`), and you do not apply the copy until they have. After resolving a clash, run `crew-vendor plan .` again (re-plan) and show the new plan. Wait for an explicit OK on the last plan.
 
 ## 4. Write the project facts
 
 1. **`CLAUDE.md`** from `templates/CLAUDE.md.tmpl`. If one exists, merge: add missing sections, keep existing text, show the diff. Sections: what the product is and what a mistake costs; repo map; the exact commands (install, run, all tests, one test, type-check, lint, format, before committing); git and PR rules; the escalation list; invariants that must always hold; pointers to `.claude/rules/*.md`. Under 150 lines. One owner file per topic, others link to it. No version numbers, file counts or anything a linter already enforces.
 2. **`.claude/rules/tdd.md`** from `templates/tdd.md`. Set `paths:` to the production source globs (a rule without `paths:` loads every session, so never leave it out) and fill in this repo's exact commands. The generic protocol lives in the `test-engineer` agent, so this file carries only what is specific to the repo.
-3. **`.claude/crew.json`** from `templates/crew.json`: the config the hooks read. The schema is `${CLAUDE_PLUGIN_ROOT}/hooks/crew.schema.json`: read it for valid keys and values, and an example sits beside it. Do not restate the schema anywhere. Validate the result against it when a validator is available, otherwise at least `jq . .claude/crew.json`. `managerModel` is optional and is left out unless the repo's owner asks for the `feature` workflow to start on a given model; with it, `crew-vendor` writes `model: <value>` into the copied `feature` skill.
+3. **`.claude/crew.json`**: already written in step 3.
 
 ## 5. Copy the plugin in
 

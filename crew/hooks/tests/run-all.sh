@@ -147,5 +147,11 @@ for suite in run-guard-tests.sh run-spec-first-tests.sh; do
   [[ $rc -eq 0 || $((total - ok)) -gt 0 ]] || broken=$((broken + 1))
 done
 
+echo "== runner self-check"
+selfcheck_out="$(bash "$HERE/run-runner-selfcheck.sh" 2>&1)"
+selfcheck_rc=$?
+[[ -z "$selfcheck_out" ]] || printf '%s\n' "$selfcheck_out"
+if [[ $selfcheck_rc -eq 0 ]]; then pass=$((pass + 1)); else fail=$((fail + 1)); fi
+
 echo "== total: $pass passed, $fail failed"
 [[ $fail -eq 0 && $broken -eq 0 ]]

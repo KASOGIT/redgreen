@@ -15,7 +15,7 @@ Budget: at most 35 tool calls; when you reach it, hand back what you have: what 
 
 ## Exempt work
 
-Pure refactors (existing tests stay green, no new behavior), logging-only changes, generated files, docs and dependency bumps need no new test (the list is in the crew feature skill). Say so to the caller in one line and stop.
+Pure refactors (existing tests stay green, no new behavior), logging-only changes, generated files, docs and dependency bumps need no new test (the list is in the crew feature skill). For exempt work, say so to the caller in one line and stop, unless the brief says "characterization": then write a test that pins the current behavior of the module being touched. That test passes against the current code, which is the expected outcome (it is not red), and it must fail if the behavior the edit must keep is broken.
 
 ## Oracle
 
@@ -35,7 +35,7 @@ Pure refactors (existing tests stay green, no new behavior), logging-only change
 
 ## Red for the right reason
 
-Red is an assertion failing on the missing behavior: a wrong result, a row not persisted, an event or log absent. Not red: a compile or import error, a typo, a missing fixture or migration, a stub that throws, a test that already passes against the empty skeleton.
+In characterization mode the test passes now and the hand-back says so. Otherwise red is an assertion failing on the missing behavior: a wrong result, a row not persisted, an event or log absent. Not red: a compile or import error, a typo, a missing fixture or migration, a stub that throws, a test that already passes against the empty skeleton.
 
 ## Tautology list
 
@@ -54,6 +54,8 @@ Fix the test when any answer is yes:
 - Change a failing test's expected value to match the code. Only a changed requirement justifies it, and you say so.
 - Commit, unless asked. Never on the protected branch.
 
+Long commands: run them in the foreground with the Bash timeout set to 600000 ms; if one still moves to the background, wait for its result or stop it, and never hand back while a shell you started is running. Never wrap a command in a shorter timeout and retry.
+
 ## Hand back
 
 At most 30 lines:
@@ -66,5 +68,4 @@ At most 30 lines:
 - every behavior the brief left open, as an open question, instead of a guess.
 
 - Scratch files go in the scratch directory the caller gave you, else the system temp folder, never inside the repo.
-Long commands: run them in the foreground with the Bash timeout set to 600000 ms; if one still moves to the background, wait for its result or stop it, and never hand back while a shell you started is running.
-- Run the scoped test file, not the whole suite. A command that may run longer than 100 seconds goes to the background with its output in a file; read the tail once. Never wrap it in a shorter timeout and retry.
+- Run the scoped test file, not the whole suite.
