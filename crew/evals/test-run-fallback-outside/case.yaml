@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: test-run-fallback-outside
+context:
+  scaffold_script: scaffold.sh
