@@ -25,7 +25,7 @@ export const rows = (
   <Box flexDirection="column">
     {DESKS.map(([slot, label]) => (
       <Text>{`${label}: ${
-        isAdvised(office, slot, now)
+        isAdvised(office, slot, now) || (slot === 'advisor' && office.consulting === true)
           ? deskStatus(office, slot, now, Infinity)
           : statusText(office.desks[slot], now)
       }`}</Text>

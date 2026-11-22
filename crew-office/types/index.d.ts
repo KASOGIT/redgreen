@@ -29,6 +29,7 @@ export type Office = {
   agents?: { [id: string]: Note }
   usage?: { percent?: number; usd?: number; fiveHour?: number; sevenDay?: number }
   advisor?: { until: number; model?: string }
+  consulting?: true
   // Written by older versions; only the session reset still clears it.
   feed?: FeedEvent[]
 }

@@ -359,7 +359,7 @@ export const noteEffort = (
 }
 
 export const resetCounts = (office: Office): Office => {
-  const { usage: _usage, feed: _feed, agents: _agents, advisor: _advisor, ...rest } = office
+  const { usage: _usage, feed: _feed, agents: _agents, advisor: _advisor, consulting: _consulting, ...rest } = office
 
   return {
     ...rest,
@@ -398,6 +398,13 @@ export const countAdvice = (office: Office, uses: number): Office =>
     count: (deskIn(office, 'advisor').count ?? 0) + uses,
   })
 
+export const noteConsulting = (office: Office, isOn: boolean): Office => {
+  if ((office.consulting === true) === isOn) return office
+  const { consulting: _, ...rest } = office
+
+  return isOn ? { ...rest, consulting: true } : rest
+}
+
 export const expireAdvice = (office: Office, until: number): Office => {
   if (office.advisor?.until !== until) return office
   const { advisor: _, ...rest } = office
@@ -407,6 +414,7 @@ export const expireAdvice = (office: Office, until: number): Office => {
 
 export const sceneOf = (office: Office, slot: string, now: number): Look => {
   if (isAdvised(office, slot, now)) return 'advised'
+  if (slot === 'advisor' && office.consulting === true) return 'working'
   const desk = office.desks[slot]
   const look = lookOf(desk, now)
 
@@ -443,6 +451,9 @@ export const deskStatus = (
     const model = office.advisor?.model
 
     return cut(model === undefined ? 'advised' : `advised by ${shortModel(model)}`, width)
+  }
+  if (slot === 'advisor' && office.consulting === true) {
+    return cut(counted(desk, 'consulting'), width)
   }
   const look = lookOf(desk, now)
   if (desk === undefined || look === 'idle') return cut(counted(desk, 'idle'), width)
@@ -604,7 +615,11 @@ export const arrange = (
 ): Drawing => {
   const { columns, scale } = layout(bodyColumns, bodyRows)
   const advisor = office.desks.advisor?.count ?? 0
-  const advisorEntry = advisor >= 1 ? `advisor ${advisor}` : 'advisor'
+  const advisorEntry = [
+    'advisor',
+    ...(advisor >= 1 ? [advisor] : []),
+    ...(office.consulting === true ? ['consulting'] : []),
+  ].join(' ')
   const isGuestIdle = rankOf(office, 'guest', now) === 3
   const tall = tallPlan(columns, scale, bodyRows)
   if (tall !== undefined) {

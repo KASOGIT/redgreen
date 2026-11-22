@@ -23,6 +23,7 @@ import {
   expireAdvice,
   countAdvice,
   noteAdvice,
+  noteConsulting,
   noteEffort,
   sceneOf,
   noteStart,
@@ -237,8 +238,12 @@ const tick = async ($: EngineInterface) => {
     const missing: string[] = []
     for (const [slot] of DESKS) {
       const desk = state.desks[slot]
-      const look = state.advisor === undefined ? undefined : sceneOf(state, slot, now)
-      if (look !== 'advised' && (!isWorking(desk) || isWaiting(state, desk!))) continue
+      const look =
+        state.advisor === undefined && state.consulting === undefined
+          ? undefined
+          : sceneOf(state, slot, now)
+      const isConsulting = slot === 'advisor' && look === 'working'
+      if (look !== 'advised' && !isConsulting && (!isWorking(desk) || isWaiting(state, desk!))) continue
       if (!drawnSlots.has(slot)) {
         missing.push(slot)
         continue
@@ -310,6 +315,7 @@ const settle = async ($: EngineInterface, state: Office) => {
   void syncStatus($, state).catch(() => {})
   const isBusy =
     Object.values(state.desks).some(isWorking) ||
+    state.consulting === true ||
     (state.advisor !== undefined && state.advisor.until > (await $.clock.now()))
 
   if (isBusy && ticker === undefined) {
@@ -520,9 +526,79 @@ export const register: Register = on => {
         await update($, office, one => noteEffort(one, who, e.effort, model))
       }
     })().catch(() => {})
-    const answer = yield* next(e)
+    let isEnded = false
+    let isReading = false
+    let isAgain = false
+    let writing: Promise<void> | undefined
+    const setConsulting = async (isOn: boolean) => {
+      const current = await read($, office)
+      if (noteConsulting(current, isOn) === current) return
+      const written = await update($, office, one =>
+        isEnded && isOn ? one : noteConsulting(one, isOn),
+      )
+      await settle($, written)
+    }
+    const consult = async () => {
+      const found = await $.session.messages({ last: 1, as: 'api' })
+      const message = 'deny' in found ? undefined : found.at(-1)
+      const content =
+        message?.role === 'assistant' && Array.isArray(message.content)
+          ? (message.content as { type?: string; name?: string; id?: string; tool_use_id?: string }[])
+          : []
+      const isOn = content.some(
+        call =>
+          call.type === 'server_tool_use' &&
+          call.name === 'advisor' &&
+          !content.some(one => one.tool_use_id === call.id),
+      )
+      if (isEnded) return
+      writing = setConsulting(isOn)
+      await writing
+    }
+    // Engine chunks are opaque: the newest message is the only mid-step signal.
+    // The delta chunks never carry it, so they trigger no read.
+    const watch = () => {
+      if (isEnded) return
+      if (isReading) {
+        isAgain = true
+        return
+      }
+      isReading = true
+      void consult()
+        .catch(() => {})
+        .finally(() => {
+          isReading = false
+          if (isAgain) {
+            isAgain = false
+            watch()
+          }
+        })
+    }
+    const isMain = e.agentId === undefined
+    const stream = next(e)
+    let answer
+    try {
+      for await (const chunk of stream) {
+        if (isMain && chunk.kind !== 'text' && chunk.kind !== 'thinking' && chunk.kind !== 'input') {
+          watch()
+        }
+        yield chunk
+      }
+      answer = await stream.result
+    } finally {
+      isEnded = true
+      if (isMain) {
+        await within(
+          $,
+          (async () => {
+            await writing?.catch(() => {})
+            await setConsulting(false)
+          })().catch(() => {}),
+        )
+      }
+    }
     const uses =
-      e.agentId === undefined
+      isMain
         ? (answer?.serverToolUses?.filter(
             one => one.name === 'advisor' && one.endedAt !== undefined,
           ).length ?? 0)
