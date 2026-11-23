@@ -112,7 +112,7 @@ test('every desk has five 16 by 16 frames (idle and four working) of palette col
 
 test('the four working frames of each desk differ pairwise and from the idle frame', () => {
   const names = ['idle', 'work0', 'work1', 'work2', 'work3'] as const
-  for (const slot of SLOTS.filter(one => one !== 'advisor')) {
+  for (const slot of SLOTS) {
     for (let a = 0; a < names.length; a += 1) {
       for (let b = a + 1; b < names.length; b += 1) {
         expect({ slot, pair: [names[a], names[b]], same: frameOf(slot, names[a]!).join('/') === frameOf(slot, names[b]!).join('/') })
@@ -157,10 +157,8 @@ test('composeDesk packs 16 by 8 cells of three numbers, as the cell rule says', 
   }
 })
 
-test('a working desk animates through four frames and an idle one stands still, the advisor desk never working', () => {
-  expect(SPRITES.advisor).toBeDefined()
-  expect(composeDesk('advisor', 'idle', 0)).toEqual(composeDesk('advisor', 'idle', 1))
-  for (const slot of SLOTS.filter(one => one !== 'advisor')) {
+test('a working desk animates through four frames and an idle one stands still, the consulting advisor included', () => {
+  for (const slot of SLOTS) {
     for (const [a, b] of [[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]] as const) {
       expect(composeDesk(slot, 'working', a)).not.toEqual(
         composeDesk(slot, 'working', b),
