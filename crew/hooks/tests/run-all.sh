@@ -88,6 +88,13 @@ check "spec-first testPatterns default in the jq filter ($tp_jq) differs from th
 check "spec-first testPatterns default in bash ($tp_bash) differs from the schema default $tp_schema" "$([[ "$tp_bash" == "$tp_schema" ]] && echo 0 || echo 1)"
 check "spec-first ignoreRegex default is not []: schema says $(sdef .properties.specFirst.properties.ignoreRegex)" "$([[ "$(sdef .properties.specFirst.properties.ignoreRegex)" == "[]" ]] && grep -q 'specFirst.ignoreRegex | if type == "array" then . else \[\] end' "$SPEC" && echo 0 || echo 1)"
 
+# Opt-in workflow flags: flat booleans, off by default, shown in the example.
+for key in confirmRed openPullRequest; do
+  check "schema $key is type boolean" "$([[ "$(jq -r --arg k "$key" '.properties[$k].type // "missing"' "$SCHEMA")" == "boolean" ]] && echo 0 || echo 1)"
+  check "schema $key default is false" "$([[ "$(jq -c --arg k "$key" '.properties[$k].default' "$SCHEMA")" == "false" ]] && echo 0 || echo 1)"
+  check "crew.example.json carries $key" "$(jq -e --arg k "$key" 'has($k)' "$EX" >/dev/null 2>&1 && echo 0 || echo 1)"
+done
+
 OUT="$(mktemp -d)"
 trap 'rm -rf "$OUT"' EXIT
 SHARDS=4

@@ -35,6 +35,8 @@ To update a repo later: `crew-vendor plan <repo>`, then `crew-vendor apply <repo
 
 Per repo, in `.claude/crew.json` (every key optional; without it the spec-first hook does nothing and the guard uses defaults). The keys and values are defined by `crew/hooks/crew.schema.json`, with an example beside it.
 
+Two opt-in booleans steer the `feature` workflow, both off by default: `confirmRed` pauses before the RED commit and waits for the developer's OK, and `openPullRequest` ends the report with a drafted PR and, after an explicit OK, pushes the branch and opens a draft pull request.
+
 ## Tests
 
 The tests live in the source repository this marketplace is published from, not here. From that repository (they need `bash` and `jq`):
