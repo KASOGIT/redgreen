@@ -18,7 +18,7 @@ exit $fail
 EOS
 chmod +x test.sh
 git add -A && git commit -q -m "feat: slugify"
-git checkout -q -b change
+git checkout -q -B change
 cat >>slug.sh <<'EOS'
 slug_max() { echo "$1" | cut -c1-$2; }
 EOS

@@ -45,7 +45,11 @@ The tests live in the source repository this marketplace is published from, not 
 - `bash tests/vendor/run.sh`: `crew-vendor` on fixtures and on the real plugin.
 - `crew/hooks/tests/run-all.sh`: the hooks.
 - Evals (they start real Claude sessions: billed per token on an API key, counted against plan usage on a subscription; they need the fixture repos the cases build with `--scaffold`): `claude plugin eval ./crew --model sonnet --runs 2 --max-cost-usd 4 --trust-plugin --scaffold --allow-tools Bash`. Results land in `crew/evals/results/`, which is git-ignored.
+  - Write-capable outcome cases live in `crew/evals-outcome/` and run in a separate mode (`--eval-dir evals-outcome`, with `--allow-tools Bash Write Edit`, threshold 0.9). A `tool_used: Skill` grader is an unscored indicator under the default ablation (it only shows the skill fired), so the outcome cases need the 0.9 threshold on the other graders.
   - On macOS the eval sandbox blocks the `/usr/bin/git` launcher (xcrun cannot write its cache), so a case that runs git fails and the test runner falls back to the full suite. Install a standalone git (for example Homebrew's) before running the evals.
   - `regex` graders use JavaScript regular expressions: no inline flags such as `(?i)`; write `[Aa]ffected` instead.
+  - A `/plugin:skill` prefix in an eval prompt is not expanded: the model may skip the skill. Ask for the Skill tool in the prompt and grade it with `tool_used: Skill`.
+  - Grader schemas are strict: a file target is `target: {source: file, path: <file>}`, a trace target is `target: trace`. `--eval-dir` is relative to the plugin. `--allow-tools` grants apply to every case whatever its `allowed_tools`, which is why write-capable cases live in their own folder.
+  - Tool inputs are matched as JSON strings: a heredoc newline is a literal `\n`, so `\btest\(` misses `\ntest(`.
 
 MIT licensed, see LICENSE.
