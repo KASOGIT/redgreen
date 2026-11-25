@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Tiny dependency-free repo with a CLAUDE.md that names the test command. Branch `change` is one commit ahead of main and adds paginate.sh with one untested off-by-one: the last page drops its last item. ./test.sh stays green on `change`.
+set -e
+git init -q -b main .
+git config user.email eval@localhost
+git config user.name eval
+git checkout -q -f main 2>/dev/null || true
+cat >slug.sh <<'EOS'
+slugify() { echo "$1" | tr 'A-Z' 'a-z' | tr -s ' ' '-'; }
+EOS
+cat >test.sh <<'EOS'
+#!/usr/bin/env bash
+. ./slug.sh
+fail=0
+n=0
+check() { n=$((n + 1)); [ "$2" = "$3" ] || { echo "FAIL $1: expected '$3' got '$2'"; fail=1; }; }
+check lowercases "$(slugify 'Hello World')" hello-world
+check collapses-spaces "$(slugify 'a   b')" a-b
+[ "$fail" = 0 ] && echo "PASS $n/$n"
+exit $fail
+EOS
+chmod +x test.sh
+cat >CLAUDE.md <<'EOS'
+# slug
+
+A tiny shell library, `slug.sh`.
+
+## Commands
+- Test: `./test.sh` (exits 0 and prints `PASS n/n` as its last line when every check passes)
+EOS
+git add -A && { git diff --cached --quiet || git commit -q -m "feat: slugify"; }
+git checkout -q -B change
+cat >paginate.sh <<'EOS'
+# paginate PAGE SIZE ITEM...: print the items of the 1-based PAGE, SIZE items per page
+paginate() {
+  local page=$1 size=$2
+  shift 2
+  local total=$# start=$(((page - 1) * size))
+  local end=$((start + size))
+  [ "$end" -gt "$total" ] && end=$((total - 1))
+  echo "${@:start+1:end-start}"
+}
+EOS
+git add -A && git commit -q -m "feat: paginate"
