@@ -17,7 +17,7 @@ To see the plugin in use within a full setup (personal rules, models, the weekly
 ## What it contains
 
 - Seven agents: `test-engineer`, `implementer`, `code-reviewer`, `test-runner`, `domain-researcher`, `architecture-planner`, `debugger-analyst`. Each sets its own `model` and `effort` in its frontmatter and ends with a size-capped hand-back, so the main session only keeps summaries.
-- Skills: `feature` (spec, plan, RED, GREEN, critique, feedback, report), `debug`, `review`, `research` (subject to plan file, with web search), `audit` (perf, bugs, debt or security findings, ranked), and `adopt`. `research` and `audit` run by hand only.
+- Skills: `feature` (spec, plan, RED, GREEN, critique, feedback, report), `debug`, `review`, `research` (subject to plan file, with web search), `audit` (perf, bugs, debt or security findings, ranked), and `adopt`. `research` and `audit` can be invoked by the model or by hand; `adopt` stays hand-only.
 - Hooks (`crew/hooks/`): a guard against hard-to-undo commands and a spec-first nudge.
 - `crew/bin/crew-vendor`: copies the plugin into a repo.
 
