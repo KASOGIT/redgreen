@@ -1,6 +1,6 @@
 ---
 name: feature
-description: "Use when asked to implement, add, build or fix something that changes behavior: runs spec, plan, test-first RED and GREEN, independent review and a report with pasted evidence."
+description: "Use when asked to implement, add, build or fix something that changes behavior, even a one-function helper: runs spec, plan, test-first RED and GREEN, independent review and a report with pasted evidence."
 argument-hint: <requirement>
 model: opus
 ---
