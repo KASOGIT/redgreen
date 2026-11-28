@@ -10,6 +10,12 @@
 #              tools and a jq stub that exits 3
 #   maxms      fail when the hook takes longer than this many milliseconds (an absolute limit: keep it far
 #              above the measured time, since the suites run concurrently under bin/check)
+#   maxcpums   fail when the CPU time (user + sys of the hook and its children) of 8 hook runs on cmd exceeds
+#              this many milliseconds. Prefer it to maxms: CPU time rose at most 1.6x under the contention of
+#              concurrent suites (more on efficiency cores), so bounds sit 5x (10x for the heaviest case) above
+#              the measured cost and still catch a regression. A hook that idles uses no CPU, so the 8 runs
+#              also fail when their wall-clock time exceeds GUARD_WALL_CEILING_MS (env, default 24000 ms,
+#              that is 8 runs x 3000 ms)
 #   scalecmd   with maxratio: a smaller command of the same shape. The case fails when the CPU time of 8 hook
 #              runs on cmd, divided by that of 8 runs on scalecmd, exceeds maxratio
 #   maxratio   a scaling limit for a hook that must stay linear: CPU time (user + sys of the hook and its
@@ -50,11 +56,11 @@ hook_cpu_ms() {
     env -u CLAUDE_PROJECT_DIR -u CREW_FALLBACK_PATH ${env_args[@]+"${env_args[@]}"} PATH="$hook_path" "$BASH_BIN" "$HOOK"
 }
 
-load_cases --arg d "$TMP" '[.expect, (.repo // "none"), (.env // "-"), (.locale // "-"), ((.noprojdir // false) | tostring), (has("config") | tostring), ((.maxms // 0) | tostring), ((.maxratio // 0) | tostring), ((.stderr // []) | join("\u001e")),
+load_cases --arg d "$TMP" '[.expect, (.repo // "none"), (.env // "-"), (.locale // "-"), ((.noprojdir // false) | tostring), (has("config") | tostring), ((.maxms // 0) | tostring), ((.maxcpums // 0) | tostring), ((.maxratio // 0) | tostring), ((.stderr // []) | join("\u001e")),
   ({tool_input: {command: .cmd}, cwd: ($d + "/" + (.repo // "none"))} | tojson), (.cmd | tojson), (if has("scalecmd") then ({tool_input: {command: .scalecmd}, cwd: ($d + "/" + (.repo // "none"))} | tojson) else "" end), (if has("config") then (.config | tojson) else "" end)] | join("\u001f")'
 # One jq pass reads every case: a record per line, fields joined by the unit separator. The hook
 # input and the command travel as compact JSON (single line, control characters escaped).
-while IFS="$SEP" read -r expect repo envname locale noproj has_config maxms maxratio stderr_has input cmd_json scale_input config_json; do
+while IFS="$SEP" read -r expect repo envname locale noproj has_config maxms maxcpums maxratio stderr_has input cmd_json scale_input config_json; do
   total=$((total + 1))
   mkdir -p "$TMP/$repo/.claude"
   rm -f "$TMP/$repo/.claude/crew.json"
@@ -83,6 +89,22 @@ while IFS="$SEP" read -r expect repo envname locale noproj has_config maxms maxr
     if [[ $((big_cpu * 100 / small_cpu)) -gt $((maxratio * 100)) ]]; then
       cmd="$(printf '%s' "$cmd_json" | jq -r '.')"
       record_fail "scaling: ${big_cpu} ms CPU vs ${small_cpu} ms for 8 runs is $((big_cpu * 100 / small_cpu))% (limit $((maxratio * 100))%): ${cmd:0:60}"
+      continue
+    fi
+  fi
+  if [[ "$maxcpums" -gt 0 ]]; then
+    w0="$(now_ms)"
+    cpu="$(hook_cpu_ms "$input")"
+    w1="$(now_ms)"
+    if [[ "$cpu" -gt "$maxcpums" ]]; then
+      cmd="$(printf '%s' "$cmd_json" | jq -r '.')"
+      record_fail "cpu: ${cpu} ms for 8 runs, limit ${maxcpums}: ${cmd:0:60}"
+      continue
+    fi
+    wall_ceiling="${GUARD_WALL_CEILING_MS:-24000}"
+    if [[ $((w1 - w0)) -gt "$wall_ceiling" ]]; then
+      cmd="$(printf '%s' "$cmd_json" | jq -r '.')"
+      record_fail "wall: $((w1 - w0)) ms for 8 runs, ceiling ${wall_ceiling}: ${cmd:0:60}"
       continue
     fi
   fi
