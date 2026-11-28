@@ -1,6 +1,6 @@
 ---
 name: audit
-description: Audits the repo through one lens (perf, bugs, debt or security) with parallel reviewers and writes a ranked findings file, and it edits no code.
+description: "Use when asked to audit the repo or some paths through one lens (perf, bugs, debt or security): runs parallel reviewers, writes a ranked findings file and edits no code."
 argument-hint: <perf|bugs|debt|security> [paths]
 ---
 
